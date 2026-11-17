@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cat Looking at a Mouse</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 55%,#2b2f45,#12131c);font-family:system-ui,sans-serif}
+  svg{position:absolute;inset:0;width:100%;height:100%}
+  .label{position:fixed;bottom:18px;width:100%;text-align:center;color:#8f94b3;font-size:14px;letter-spacing:.08em;font-weight:600}
+</style>
+</head>
+<body>
+<svg viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet">
+  <circle r="210" fill="none" stroke="#3a3f5c" stroke-width="2" stroke-dasharray="6 10"/>
+  <ellipse cx="0" cy="95" rx="95" ry="14" fill="#000" opacity=".35"/>
+  <g>
+    <path stroke="#f2a65a" stroke-width="16" fill="none" stroke-linecap="round" d="M55 70 C120 70 130 10 105 -15">
+      <animate attributeName="d" dur="2.1s" repeatCount="indefinite" values="M55 70 C120 70 155 -2 130 -15;M55 70 C120 70 105 22 80 -15;M55 70 C120 70 155 -2 130 -15"/>
+    </path>
+    <ellipse cx="0" cy="45" rx="70" ry="55" fill="#f2a65a"/>
+    <ellipse cx="0" cy="55" rx="38" ry="38" fill="#fbe3c4"/>
+    <ellipse cx="-30" cy="95" rx="20" ry="10" fill="#f2a65a"/>
+    <ellipse cx="30" cy="95" rx="20" ry="10" fill="#f2a65a"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" dur="7s" repeatCount="indefinite" values="6 0;0 4;-6 0;0 -4;6 0"/>
+      <polygon points="-58,-60 -40,-118 -10,-78" fill="#f2a65a"/>
+      <polygon points="58,-60 40,-118 10,-78" fill="#f2a65a"/>
+      <polygon points="-48,-70 -40,-102 -22,-80" fill="#f6b8b8"/>
+      <polygon points="48,-70 40,-102 22,-80" fill="#f6b8b8"/>
+      <circle cx="0" cy="-45" r="62" fill="#f2a65a"/>
+      <path d="M-20 -100 L-15 -80 M0 -105 L0 -84 M20 -100 L15 -80" stroke="#d9853b" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="-24" cy="-52" rx="17" ry="19" fill="#fff"/>
+      <ellipse cx="24" cy="-52" rx="17" ry="19" fill="#fff"/>
+      <g transform="translate(-24,-52)"><ellipse rx="6" ry="12" fill="#1d1d1d"><animateMotion dur="7s" repeatCount="indefinite" path="M8 0 A8 8 0 1 1 -8 0 A8 8 0 1 1 8 0"/></ellipse></g>
+      <g transform="translate(24,-52)"><ellipse rx="6" ry="12" fill="#1d1d1d"><animateMotion dur="7s" repeatCount="indefinite" path="M8 0 A8 8 0 1 1 -8 0 A8 8 0 1 1 8 0"/></ellipse></g>
+      <polygon points="-7,-28 7,-28 0,-20" fill="#e2747e"/>
+      <path d="M0 -20 Q-8 -10 -16 -16 M0 -20 Q8 -10 16 -16" stroke="#6b3a1e" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M-25 -25 L-80 -32 M-25 -20 L-80 -16 M25 -25 L80 -32 M25 -20 L80 -16" stroke="#fff" stroke-width="2" opacity=".8"/>
+    </g>
+  </g>
+  <g>
+    <animateMotion dur="7s" repeatCount="indefinite" rotate="auto" path="M210 0 A210 210 0 1 1 -210 0 A210 210 0 1 1 210 0"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" dur=".24s" repeatCount="indefinite" values="0 -1.5;0 1.5;0 -1.5"/>
+      <path d="M-22 0 Q-40 -10 -55 4" stroke="#c9a3a8" stroke-width="3" fill="none" stroke-linecap="round">
+        <animate attributeName="d" dur=".5s" repeatCount="indefinite" values="M-22 0 Q-40 -18 -55 10;M-22 0 Q-40 -2 -55 -4;M-22 0 Q-40 -18 -55 10"/>
+      </path>
+      <ellipse rx="24" ry="14" fill="#a9adbd"/>
+      <circle cx="8" cy="-12" r="8" fill="#a9adbd"/><circle cx="8" cy="-12" r="4.5" fill="#f6b8b8"/>
+      <circle cx="8" cy="12" r="8" fill="#a9adbd"/><circle cx="8" cy="12" r="4.5" fill="#f6b8b8"/>
+      <ellipse cx="22" cy="0" rx="10" ry="8" fill="#a9adbd"/>
+      <circle cx="31" cy="0" r="3" fill="#e2747e"/>
+      <circle cx="20" cy="-4" r="2.2" fill="#111"/><circle cx="20" cy="4" r="2.2" fill="#111"/>
+    </g>
+  </g>
+</svg>
+<div class="label">CAT LOOKING AT A MOUSE GOING ROUND IT</div>
+</body>
+</html>

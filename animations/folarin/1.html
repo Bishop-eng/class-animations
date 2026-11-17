@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Ball Animation</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            overflow: hidden;
+        }
+        canvas {
+            background: #0f3460;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const ball = {
+            x: 300,
+            y: 60,
+            radius: 30,
+            vy: 0,
+            gravity: 0.6,
+            bounceFactor: 0.85,
+            squashX: 1,
+            squashY: 1,
+            color: '#e94560'
+        };
+
+        const floorY = 360;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Floor
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, floorY, canvas.width, canvas.height - floorY);
+
+            // Draw Dynamic Shadow
+            const heightRatio = Math.max(0, (ball.y - 60) / (floorY - 60));
+            const shadowRadiusX = 15 + heightRatio * 25;
+            const shadowAlpha = 0.1 + heightRatio * 0.4;
+            ctx.beginPath();
+            ctx.ellipse(ball.x, floorY + 8, shadowRadiusX, 6, 0, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+            ctx.fill();
+
+            // Physics Update
+            ball.vy += ball.gravity;
+            ball.y += ball.vy;
+
+            // Recover squash/stretch
+            ball.squashX += (1 - ball.squashX) * 0.15;
+            ball.squashY += (1 - ball.squashY) * 0.15;
+
+            // Floor Collision
+            if (ball.y + ball.radius * ball.squashY >= floorY) {
+                ball.y = floorY - ball.radius;
+                ball.vy = -ball.vy * ball.bounceFactor;
+
+                // Apply squash effect on impact
+                const impact = Math.min(Math.abs(ball.vy) / 18, 0.4);
+                ball.squashX = 1 + impact;
+                ball.squashY = 1 - impact;
+
+                // Keep bouncing infinitely at a consistent minimum energy
+                if (Math.abs(ball.vy) < 12) {
+                    ball.vy = -14;
+                }
+            }
+
+            // Draw Ball with Squash & Stretch
+            ctx.save();
+            ctx.translate(ball.x, ball.y);
+            ctx.scale(ball.squashX, ball.squashY);
+
+            const gradient = ctx.createRadialGradient(-10, -10, 5, 0, 0, ball.radius);
+            gradient.addColorStop(0, '#ff758f');
+            gradient.addColorStop(1, ball.color);
+
+            ctx.beginPath();
+            ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.restore();
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>

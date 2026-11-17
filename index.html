@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Class Animations</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Class Animations</h1>
+    <p>Click a student to see their work.</p>
+  </header>
+
+  <main>
+    <div id="gallery" class="gallery"></div>
+  </main>
+
+  <div id="modal" class="modal hidden">
+    <div class="topbar">
+      <img id="mPhoto" alt="">
+      <div class="who">
+        <h2 id="mName"></h2>
+        <p id="mMatric"></p>
+      </div>
+      <div id="tabs" class="tabs"></div>
+      <div class="actions">
+        <button id="toggleCode">Show code</button>
+        <button id="full">Fullscreen</button>
+        <button id="close" class="close" aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="stage">
+      <iframe id="frame" sandbox="allow-scripts" allow="fullscreen" allowfullscreen title="Animation result"></iframe>
+      <div id="codebox" class="codebox hidden">
+        <div class="codebar">
+          <span>Code</span>
+          <button id="copy">Copy</button>
+        </div>
+        <pre><code id="code"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="students.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moon Across the Sky</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    .moon {
+      width: 90px;
+      height: 90px;
+      background: #f5f6fa;
+      border-radius: 50%;
+      box-shadow: 0 0 40px 15px rgba(245, 246, 250, 0.4), inset -15px -10px 0 0 #dcdde1;
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      animation: moonArcX 12s linear infinite, moonArcY 12s ease-in-out infinite;
+    }
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite alternate;
+    }
+    .s1 { width: 3px; height: 3px; top: 20%; left: 15%; }
+    .s2 { width: 4px; height: 4px; top: 10%; left: 45%; animation-delay: 0.5s; }
+    .s3 { width: 2px; height: 2px; top: 30%; left: 75%; animation-delay: 1s; }
+    .s4 { width: 3px; height: 3px; top: 15%; left: 85%; animation-delay: 1.5s; }
+    .s5 { width: 4px; height: 4px; top: 40%; left: 30%; animation-delay: 0.8s; }
+
+    .landscape {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100px;
+      background: #050608;
+      clip-path: polygon(0 40%, 25% 20%, 50% 50%, 75% 15%, 100% 45%, 100% 100%, 0 100%);
+    }
+
+    @keyframes moonArcX {
+      0% { left: -10%; }
+      100% { left: 105%; }
+    }
+    @keyframes moonArcY {
+      0% { bottom: 10%; }
+      50% { bottom: 75%; }
+      100% { bottom: 10%; }
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="star s1"></div>
+  <div class="star s2"></div>
+  <div class="star s3"></div>
+  <div class="star s4"></div>
+  <div class="star s5"></div>
+  <div class="moon"></div>
+  <div class="landscape"></div>
+</body>
+</html>

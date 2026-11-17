@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat and Mouse</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+
+<div style="text-align:center; font-family:Arial, sans-serif;">
+  <canvas id="catMouseCanvas" width="500" height="500"
+          style="background:#fdf6e3; border:2px solid #444; border-radius:12px;"></canvas>
+  <p>🐱 The cat watches the mouse run around it 🐭</p>
+</div>
+
+<script>
+(function () {
+  var canvas = document.getElementById("catMouseCanvas");
+  var ctx = canvas.getContext("2d");
+
+  var CX = 250, CY = 270;      // center of the circling path
+  var RX = 190, RY = 170;      // path radius
+  var angle = 0;               // mouse position on the path
+  var t = 0;                   // time (for tail wag)
+
+  function drawPath() {
+    ctx.save();
+    ctx.setLineDash([6, 8]);
+    ctx.strokeStyle = "#d8c9a3";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(CX, CY, RX, RY, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawCat(mx, my) {
+    // Tail
+    ctx.strokeStyle = "#e8913a";
+    ctx.lineWidth = 12;
+    ctx.lineCap = "round";
+    var wag = Math.sin(t * 3) * 25;
+    ctx.beginPath();
+    ctx.moveTo(300, 320);
+    ctx.bezierCurveTo(350, 330, 360 + wag, 280, 340 + wag, 240);
+    ctx.stroke();
+
+    // Body
+    ctx.fillStyle = "#f4a949";
+    ctx.beginPath();
+    ctx.ellipse(250, 305, 62, 52, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Front paws
+    ctx.fillStyle = "#f9c27a";
+    ctx.beginPath(); ctx.ellipse(225, 350, 16, 10, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(275, 350, 16, 10, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Ears
+    ctx.fillStyle = "#f4a949";
+    ctx.beginPath(); ctx.moveTo(212, 195); ctx.lineTo(206, 150); ctx.lineTo(240, 183); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(288, 195); ctx.lineTo(294, 150); ctx.lineTo(260, 183); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#f7b6b6";
+    ctx.beginPath(); ctx.moveTo(214, 186); ctx.lineTo(211, 163); ctx.lineTo(230, 183); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(286, 186); ctx.lineTo(289, 163); ctx.lineTo(270, 183); ctx.closePath(); ctx.fill();
+
+    // Head
+    ctx.fillStyle = "#f4a949";
+    ctx.beginPath(); ctx.arc(250, 225, 46, 0, Math.PI * 2); ctx.fill();
+
+    // Stripes
+    ctx.strokeStyle = "#d9822b";
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(250, 180); ctx.lineTo(250, 195); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(235, 182); ctx.lineTo(238, 194); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(265, 182); ctx.lineTo(262, 194); ctx.stroke();
+
+    // Eyes (pupils follow the mouse)
+    var eyes = [[232, 220], [268, 220]];
+    for (var i = 0; i < eyes.length; i++) {
+      var ex = eyes[i][0], ey = eyes[i][1];
+      var dx = mx - ex, dy = my - ey;
+      var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+      var px = ex + (dx / dist) * 5;
+      var py = ey + (dy / dist) * 5;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath(); ctx.arc(ex, ey, 11, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#333"; ctx.lineWidth = 1.5; ctx.stroke();
+
+      ctx.fillStyle = "#222";
+      ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Nose
+    ctx.fillStyle = "#e57373";
+    ctx.beginPath(); ctx.moveTo(244, 238); ctx.lineTo(256, 238); ctx.lineTo(250, 246); ctx.closePath(); ctx.fill();
+
+    // Mouth
+    ctx.strokeStyle = "#444"; ctx.lineWidth = 2; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(250, 246); ctx.lineTo(250, 251); ctx.stroke();
+    ctx.beginPath(); ctx.arc(243, 251, 7, 0, Math.PI * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.arc(257, 251, 7, Math.PI * 0.2, Math.PI); ctx.stroke();
+
+    // Whiskers
+    ctx.lineWidth = 1.5;
+    var w = [[-1, -6], [-1, 0], [-1, 6], [1, -6], [1, 0], [1, 6]];
+    for (var j = 0; j < w.length; j++) {
+      var side = w[j][0], tilt = w[j][1];
+      var sx = 250 + side * 22, sy = 242;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + side * 38, sy + tilt); ctx.stroke();
+    }
+  }
+
+  function drawMouse(mx, my, heading) {
+    ctx.save();
+    ctx.translate(mx, my);
+    ctx.rotate(heading);
+
+    // Tail
+    ctx.strokeStyle = "#e5a1a1"; ctx.lineWidth = 3; ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(-16, 0);
+    ctx.quadraticCurveTo(-28, Math.sin(t * 8) * 8, -42, Math.sin(t * 8 + 1) * 6);
+    ctx.stroke();
+
+    // Body
+    ctx.fillStyle = "#9e9e9e";
+    ctx.beginPath(); ctx.ellipse(0, 0, 17, 11, 0, 0, Math.PI * 2); ctx.fill();
+
+    // Ears
+    ctx.fillStyle = "#f4b6c2";
+    ctx.beginPath(); ctx.arc(10, -8, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(10, 8, 5, 0, Math.PI * 2); ctx.fill();
+
+    // Head
+    ctx.fillStyle = "#b0b0b0";
+    ctx.beginPath(); ctx.arc(15, 0, 7, 0, Math.PI * 2); ctx.fill();
+
+    // Eyes and nose
+    ctx.fillStyle = "#111";
+    ctx.beginPath(); ctx.arc(17, -3, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(17, 3, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#e57373";
+    ctx.beginPath(); ctx.arc(22, 0, 2, 0, Math.PI * 2); ctx.fill();
+
+    ctx.restore();
+  }
+
+  function animate() {
+    t += 0.016;
+    angle += 0.02;
+
+    var mx = CX + RX * Math.cos(angle);
+    var my = CY + RY * Math.sin(angle);
+    var heading = angle + Math.PI / 2;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPath();
+    drawCat(mx, my);
+    drawMouse(mx, my, heading);
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+</script>
+
+</body>
+</html>

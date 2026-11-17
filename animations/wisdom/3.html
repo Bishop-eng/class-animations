@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPE505 - Moving car</title>
+
+<!--
+  HOW TO EDIT THIS FILE
+  Change the values under "Settings for the car" in the script: the three colours, CAR_SPEED and CAR_DIRECTION (1 = right, -1 = left).
+  Page colours are in the CSS below (the body rule).
+-->
+
+<style>
+  body { margin: 0; padding: 16px; background: rgb(242, 238, 238); color: midnightblue;
+         font-family: system-ui, sans-serif; }
+  h1 { text-align: center; font-size: 22px; margin: 4px 0 16px; }
+
+  /* The animation sits in one card (section), centred on the page. */
+  section { max-width: 520px; margin: 0 auto; background: white; border: 1px solid lightgray;
+            border-radius: 12px; padding: 12px; }
+  h2 { margin: 0 0 10px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+
+  /* The round number badge in front of the title. */
+  .num { background: midnightblue; color: white; width: 26px; height: 26px; border-radius: 50%;
+         display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* The canvas is the drawing area. It scales to the width of the card. */
+  canvas { width: 100%; height: auto; display: block; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<h1>2D Animation: Moving car</h1>
+
+<section><h2><span class="num">2</span> Moving car</h2><canvas id="carCanvas" width="480" height="300"></canvas></section>
+
+<script>
+/* =====================================================================
+   HOW THE PAGE WORKS
+   The canvas is a drawing board, and the "context" (g) is the pen.
+   Every frame, the code erases the board, draws the picture again, and
+   moves the objects by a small amount.
+   ===================================================================== */
+
+const carCanvas = document.getElementById('carCanvas');
+const gCar = carCanvas.getContext('2d');
+const W = 480, H = 300;           // the size of the canvas, in pixels
+
+
+/* =====================================================================
+   SECTION 2: THE MOVING CAR
+   ===================================================================== */
+
+// ----- Settings for the car -----
+const CAR_BODY_COLOR   = 'grey';
+const CAR_ROOF_COLOR   = 'navy';
+const CAR_WINDOW_COLOR = 'lightblue';
+const CAR_SPEED        = 130;     // pixels per second; a larger value is faster
+const CAR_DIRECTION    = 1;       // 1 drives to the right, -1 drives to the left
+
+const ROAD_TOP = H - 100;         // where the road begins
+const CAR_Y    = H - 55;          // the height of the bottom of the car body on the road
+
+let carX = CAR_DIRECTION === 1 ? -80 : W + 80;   // start just outside the canvas
+let wheelAngle = 0;               // how far the wheels have turned
+
+function updateCar(dt) {
+  carX += CAR_SPEED * CAR_DIRECTION * dt;        // move the car
+
+  // When the car leaves one edge, it appears again at the other edge.
+  if (CAR_DIRECTION === 1  && carX > W + 80) carX = -80;
+  if (CAR_DIRECTION === -1 && carX < -80)    carX = W + 80;
+
+  wheelAngle += (CAR_SPEED / 14) * dt;           // distance divided by wheel radius gives the angle
+}
+
+// Draws the car with its centre at (0, 0). The caller moves and flips the drawing.
+function drawCarShape(g) {
+  g.fillStyle = CAR_BODY_COLOR;                  // lower body
+  g.fillRect(-60, -38, 120, 26);
+
+  g.fillStyle = CAR_ROOF_COLOR;                  // cabin, drawn as a four-sided shape
+  g.beginPath();
+  g.moveTo(-32, -38); g.lineTo(-18, -64); g.lineTo(26, -64); g.lineTo(42, -38);
+  g.closePath();
+  g.fill();
+
+  g.fillStyle = CAR_WINDOW_COLOR;                // window, slightly smaller than the cabin
+  g.beginPath();
+  g.moveTo(-24, -40); g.lineTo(-14, -59); g.lineTo(22, -59); g.lineTo(34, -40);
+  g.closePath();
+  g.fill();
+
+  g.fillStyle = 'yellow';                        // headlight at the front
+  g.fillRect(56, -34, 6, 8);
+
+  // Two wheels. Each has a dark tyre, a light hub and one spoke that shows the turning.
+  [-35, 35].forEach(function (wx) {
+    g.save();
+    g.translate(wx, -12);
+    g.rotate(wheelAngle);
+    g.fillStyle = 'black';
+    g.beginPath(); g.arc(0, 0, 14, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'lightgray';
+    g.beginPath(); g.arc(0, 0, 7, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = 'black';
+    g.lineWidth = 2;
+    g.beginPath(); g.moveTo(-7, 0); g.lineTo(7, 0); g.stroke();
+    g.restore();
+  });
+}
+
+function drawCar() {
+  const g = gCar;
+  g.clearRect(0, 0, W, H);
+
+  g.fillStyle = 'lightskyblue';                  // the sky
+  g.fillRect(0, 0, W, ROAD_TOP);
+  g.fillStyle = 'gold';                          // the sun
+  g.beginPath(); g.arc(400, 60, 30, 0, Math.PI * 2); g.fill();
+  g.fillStyle = 'seagreen';                      // the grass beside the road
+  g.fillRect(0, ROAD_TOP - 20, W, 20);
+  g.fillStyle = 'dimgray';                       // the road
+  g.fillRect(0, ROAD_TOP, W, H - ROAD_TOP);
+  g.fillStyle = 'white';                         // dashes along the middle of the road
+  for (let x = 10; x < W; x += 50) g.fillRect(x, H - 50, 28, 4);
+
+  g.save();
+  g.translate(carX, CAR_Y);                      // move the origin to the car position
+  g.scale(CAR_DIRECTION, 1);                     // a value of -1 flips the car to face left
+  drawCarShape(g);
+  g.restore();
+}
+
+
+/* =====================================================================
+   THE ANIMATION LOOP
+   The browser calls animate() before every screen refresh, about 60 times
+   per second. dt is the time since the last frame, in seconds. Using dt
+   keeps the speed the same on fast and slow computers.
+   ===================================================================== */
+let lastTime = performance.now();
+
+function animate(now) {
+  const dt = Math.min((now - lastTime) / 1000, 0.05);  // the limit avoids jumps after a pause
+  lastTime = now;
+
+  updateCar(dt);  drawCar();
+
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

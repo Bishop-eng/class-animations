@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Still Stand</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+
+<div style="text-align:center; font-family:Arial, sans-serif;">
+  <canvas id="dramaCanvas" width="700" height="420"
+          style="background:#000; border:2px solid #444; border-radius:12px; max-width:100%;"></canvas>
+  <p>🎭 A dramatic conversation about standing tall</p>
+</div>
+
+<script>
+(function () {
+  var canvas = document.getElementById("dramaCanvas");
+  var ctx = canvas.getContext("2d");
+  var W = canvas.width, H = canvas.height;
+  var GY = 340;                       // ground level
+  var HERO_X = 170, DOUBT_X = 540;
+
+  // Change these to match you
+  var SKIN = "#d9a066";
+  var HAIR = "#1b1b1b";
+  var HOODIE = "#3f51b5";
+  var PANTS = "#2c3e50";
+
+  var script = [
+    { who: "doubt", text: "You can't do it. Look at you." },
+    { who: "hero",  text: "Look at me? I'm still standing." },
+    { who: "doubt", text: "One leg. No chance. Give up." },
+    { who: "hero",  text: "I lost a leg, not my will." },
+    { who: "doubt", text: "Nobody will believe in you." },
+    { who: "hero",  text: "Then I'll believe enough for all of us." }
+  ];
+
+  var lineIndex = 0, charCount = 0, hold = 0;
+  var phase = "talk";                 // "talk" or "ending"
+  var endTimer = 0, frame = 0;
+  var flash = 0, shake = 0, introFade = 1, heroGlow = 0, dawn = 0;
+
+  var rain = [];
+  for (var i = 0; i < 90; i++) {
+    rain.push({ x: Math.random() * W, y: Math.random() * H,
+                speed: 9 + Math.random() * 7, len: 10 + Math.random() * 10 });
+  }
+
+  /* ---------- helpers ---------- */
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function wrap(text, maxW) {
+    var words = text.split(" ");
+    var lines = [], cur = "";
+    for (var k = 0; k < words.length; k++) {
+      var test = cur ? cur + " " + words[k] : words[k];
+      if (ctx.measureText(test).width > maxW && cur) {
+        lines.push(cur);
+        cur = words[k];
+      } else {
+        cur = test;
+      }
+    }
+    lines.push(cur);
+    return lines;
+  }
+
+  function drawBubble(text, shown, x, y, w, tipX, tipY, fill, stroke, textColor) {
+    ctx.font = "18px Georgia, serif";
+    ctx.textAlign = "left";
+    var lines = wrap(text, w - 28);
+    var h = lines.length * 24 + 20;
+
+    ctx.fillStyle = fill;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 3;
+    roundRect(x, y, w, h, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    // tail
+    var baseX = Math.max(x + 30, Math.min(tipX, x + w - 30));
+    ctx.beginPath();
+    ctx.moveTo(baseX - 10, y + h);
+    ctx.lineTo(baseX + 10, y + h);
+    ctx.lineTo(tipX, tipY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(baseX - 10, y + h);
+    ctx.lineTo(tipX, tipY);
+    ctx.lineTo(baseX + 10, y + h);
+    ctx.stroke();
+    ctx.fillRect(baseX - 9, y + h - 2.5, 18, 5);
+
+    // typed text
+    ctx.fillStyle = textColor;
+    var remaining = Math.floor(shown);
+    for (var n = 0; n < lines.length; n++) {
+      if (remaining <= 0) break;
+      var count = Math.min(remaining, lines[n].length);
+      ctx.fillText(lines[n].substring(0, count), x + 14, y + 28 + n * 24);
+      remaining -= lines[n].length + 1;
+    }
+  }
+
+  /* ---------- characters ---------- */
+  function drawHero(x, gy, speaker, typing) {
+    var speaking = speaker === "hero";
+    var bob = Math.sin(frame * 0.06) * 1.5;
+    var hy = gy - 165 + bob + (speaker === "doubt" ? 3 : 0);
+
+    // golden glow
+    if (heroGlow > 0.01) {
+      var g = ctx.createRadialGradient(x, gy - 90, 10, x, gy - 90, 140);
+      g.addColorStop(0, "rgba(255,215,100," + (0.45 * heroGlow) + ")");
+      g.addColorStop(1, "rgba(255,215,100,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(x, gy - 90, 140, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    // crutch
+    ctx.strokeStyle = "#8d6e63";
+    ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(x - 30, gy - 138); ctx.lineTo(x - 48, gy - 6); ctx.stroke();
+    ctx.lineWidth = 7;
+    ctx.beginPath(); ctx.moveTo(x - 40, gy - 139); ctx.lineTo(x - 22, gy - 137); ctx.stroke();
+    ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.moveTo(x - 45, gy - 95); ctx.lineTo(x - 31, gy - 95); ctx.stroke();
+    ctx.fillStyle = "#333";
+    ctx.beginPath(); ctx.arc(x - 48, gy - 4, 4, 0, Math.PI * 2); ctx.fill();
+
+    // standing leg and shoe
+    ctx.strokeStyle = PANTS;
+    ctx.lineWidth = 15;
+    ctx.beginPath(); ctx.moveTo(x + 9, gy - 85); ctx.lineTo(x + 9, gy - 12); ctx.stroke();
+    ctx.fillStyle = "#1c1c1c";
+    ctx.beginPath(); ctx.ellipse(x + 14, gy - 6, 15, 7, 0, 0, Math.PI * 2); ctx.fill();
+
+    // folded pant leg (other leg missing)
+    ctx.fillStyle = PANTS;
+    ctx.beginPath();
+    ctx.moveTo(x - 19, gy - 90);
+    ctx.lineTo(x - 19, gy - 64);
+    ctx.quadraticCurveTo(x - 10, gy - 52, x - 1, gy - 64);
+    ctx.lineTo(x - 1, gy - 90);
+    ctx.closePath();
+    ctx.fill();
+
+    // hips and torso
+    ctx.fillStyle = PANTS;
+    roundRect(x - 21, gy - 98, 42, 22, 8); ctx.fill();
+    ctx.fillStyle = HOODIE;
+    roundRect(x - 22, gy - 142, 44, 52, 14); ctx.fill();
+
+    // left arm (on the crutch)
+    ctx.strokeStyle = HOODIE;
+    ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(x - 20, gy - 132); ctx.lineTo(x - 36, gy - 96); ctx.stroke();
+    ctx.fillStyle = SKIN;
+    ctx.beginPath(); ctx.arc(x - 37, gy - 95, 5.5, 0, Math.PI * 2); ctx.fill();
+
+    // right arm (gestures while speaking)
+    var hx, hyHand;
+    if (speaking && typing) { hx = x + 50; hyHand = gy - 160 + Math.sin(frame * 0.25) * 10; }
+    else if (speaking)      { hx = x + 46; hyHand = gy - 165; }
+    else                    { hx = x + 30; hyHand = gy - 98; }
+    ctx.strokeStyle = HOODIE;
+    ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(x + 20, gy - 132); ctx.lineTo(hx, hyHand); ctx.stroke();
+    ctx.fillStyle = SKIN;
+    ctx.beginPath(); ctx.arc(hx, hyHand, 6, 0, Math.PI * 2); ctx.fill();
+
+    // head and hair
+    ctx.fillStyle = SKIN;
+    ctx.beginPath(); ctx.arc(x, hy, 22, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = HAIR;
+    ctx.beginPath(); ctx.arc(x, hy, 23, Math.PI * 1.15, Math.PI * 1.85); ctx.closePath(); ctx.fill();
+
+    // eyes (looking right, toward the shadow)
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath(); ctx.arc(x - 8, hy + 4, 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 8, hy + 4, 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#222";
+    ctx.beginPath(); ctx.arc(x - 6.5, hy + 4, 2.2, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 9.5, hy + 4, 2.2, 0, Math.PI * 2); ctx.fill();
+
+    // eyebrows: determined when speaking, worried when the shadow speaks
+    var oy, iy;
+    if (speaking)               { oy = hy - 6; iy = hy - 2; }
+    else if (speaker === "doubt") { oy = hy - 2; iy = hy - 6; }
+    else                        { oy = hy - 4; iy = hy - 4; }
+    ctx.strokeStyle = HAIR;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(x - 13, oy); ctx.lineTo(x - 4, iy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + 4, iy); ctx.lineTo(x + 13, oy); ctx.stroke();
+
+    // mouth
+    if (speaking && typing) {
+      ctx.fillStyle = "#5a1d1d";
+      ctx.beginPath();
+      ctx.ellipse(x + 2, hy + 15, 5, 2 + Math.abs(Math.sin(frame * 0.5)) * 4, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (dawn > 0.5) {
+      ctx.strokeStyle = "#5a1d1d";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(x + 1, hy + 9, 8, Math.PI * 0.15, Math.PI * 0.85); ctx.stroke();
+    } else {
+      ctx.strokeStyle = "#5a1d1d";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(x - 5, hy + 15); ctx.lineTo(x + 7, hy + 15); ctx.stroke();
+    }
+  }
+
+  function drawDoubt(x, gy, alpha, speaking, typing) {
+    if (alpha <= 0.01) return;
+    var f = Math.sin(frame * 0.05) * 6;
+    var hemA = Math.sin(frame * 0.1) * 4;
+    var hemB = Math.sin(frame * 0.1 + 1) * 4;
+
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.lineCap = "round";
+    ctx.shadowColor = "rgba(255,30,70,0.9)";
+    ctx.shadowBlur = speaking ? 28 : 10;
+
+    // cloak
+    ctx.fillStyle = "#120a1c";
+    ctx.beginPath();
+    ctx.moveTo(x - 28, gy - 172 + f);
+    ctx.bezierCurveTo(x - 80, gy - 110, x - 85, gy - 30, x - 70, gy - 8);
+    ctx.lineTo(x - 42, gy - 16 + hemA);
+    ctx.lineTo(x - 16, gy - 4);
+    ctx.lineTo(x + 10, gy - 16 + hemB);
+    ctx.lineTo(x + 40, gy - 4);
+    ctx.lineTo(x + 70, gy - 8);
+    ctx.bezierCurveTo(x + 85, gy - 30, x + 80, gy - 110, x + 28, gy - 172 + f);
+    ctx.closePath();
+    ctx.fill();
+
+    // hood
+    ctx.beginPath(); ctx.arc(x, gy - 196 + f, 28, 0, Math.PI * 2); ctx.fill();
+
+    // pointing arm
+    if (speaking) {
+      var handY = gy - 150 + f + Math.sin(frame * 0.3) * 6;
+      ctx.strokeStyle = "#120a1c";
+      ctx.lineWidth = 9;
+      ctx.beginPath();
+      ctx.moveTo(x - 45, gy - 140 + f);
+      ctx.quadraticCurveTo(x - 80, gy - 165 + f, x - 115, handY);
+      ctx.stroke();
+      ctx.lineWidth = 3;
+      for (var k = -1; k <= 1; k++) {
+        ctx.beginPath();
+        ctx.moveTo(x - 115, handY);
+        ctx.lineTo(x - 135, handY + k * 7);
+        ctx.stroke();
+      }
+    }
+    ctx.shadowBlur = 0;
+
+    // face void
+    ctx.fillStyle = "#000";
+    ctx.beginPath(); ctx.ellipse(x - 3, gy - 196 + f, 20, 22, 0, 0, Math.PI * 2); ctx.fill();
+
+    // glowing eyes
+    ctx.shadowColor = "#ff2d4a";
+    ctx.shadowBlur = 14;
+    ctx.fillStyle = "#ff2d4a";
+    var ey = (speaking && typing) ? 4 : 2.5;
+    ctx.beginPath(); ctx.ellipse(x - 13, gy - 200 + f, 6, ey, 0.35, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(x + 5, gy - 200 + f, 6, ey, -0.35, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // jagged mouth
+    if (speaking && typing) {
+      ctx.strokeStyle = "#ff2d4a";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x - 14, gy - 186 + f);
+      ctx.lineTo(x - 8, gy - 181 + f);
+      ctx.lineTo(x - 2, gy - 187 + f);
+      ctx.lineTo(x + 4, gy - 181 + f);
+      ctx.lineTo(x + 10, gy - 186 + f);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  /* ---------- timeline ---------- */
+  function startLine() {
+    charCount = 0;
+    hold = 0;
+    if (script[lineIndex].who === "doubt") { flash = 1; shake = 8; }
+  }
+
+  function resetScene() {
+    lineIndex = 0;
+    phase = "talk";
+    endTimer = 0;
+    introFade = 1;
+    startLine();
+  }
+
+  function currentSpeaker() {
+    return phase === "talk" ? script[lineIndex].who : null;
+  }
+
+  function update() {
+    frame++;
+
+    if (phase === "talk") {
+      var line = script[lineIndex];
+      if (charCount < line.text.length) {
+        charCount += 0.6;
+      } else {
+        hold++;
+        if (hold > 70) {
+          lineIndex++;
+          if (lineIndex >= script.length) { phase = "ending"; endTimer = 0; }
+          else { startLine(); }
+        }
+      }
+    } else {
+      endTimer++;
+      if (endTimer > 440) { resetScene(); }
+    }
+
+    dawn = phase === "ending" ? Math.min(endTimer / 180, 1) : 0;
+    var target = currentSpeaker() === "hero" ? 1 : dawn;
+    heroGlow += (target - heroGlow) * 0.08;
+    flash *= 0.9;
+    shake *= 0.9;
+    introFade = Math.max(0, introFade - 0.02);
+
+    for (var r = 0; r < rain.length; r++) {
+      var d = rain[r];
+      d.y += d.speed;
+      d.x -= 2;
+      if (d.y > H) { d.y = -d.len; d.x = Math.random() * (W + 40); }
+      if (d.x < 0) { d.x += W; }
+    }
+  }
+
+  /* ---------- drawing ---------- */
+  function draw() {
+    var speaker = currentSpeaker();
+    var line = null, typing = false;
+    if (phase === "talk") {
+      line = script[lineIndex];
+      typing = charCount < line.text.length;
+    }
+    var doubtAlpha = phase === "ending" ? Math.max(0, 1 - endTimer / 120) : 1;
+
+    ctx.save();
+    ctx.lineCap = "round";
+    if (shake > 0.3) {
+      ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+    }
+
+    // night sky
+    var bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, "#0b0f24");
+    bg.addColorStop(0.65, "#1a1033");
+    bg.addColorStop(1, "#050508");
+    ctx.fillStyle = bg;
+    ctx.fillRect(-20, -20, W + 40, H + 40);
+
+    // sunrise
+    if (dawn > 0) {
+      var sun = ctx.createLinearGradient(0, 0, 0, H);
+      sun.addColorStop(0, "#ff9a5a");
+      sun.addColorStop(0.6, "#ffd27f");
+      sun.addColorStop(1, "#4a3358");
+      ctx.globalAlpha = dawn * 0.85;
+      ctx.fillStyle = sun;
+      ctx.fillRect(-20, -20, W + 40, H + 40);
+      ctx.globalAlpha = 1;
+
+      var glowSun = ctx.createRadialGradient(W / 2, GY, 10, W / 2, GY, 220);
+      glowSun.addColorStop(0, "rgba(255,230,160," + (0.8 * dawn) + ")");
+      glowSun.addColorStop(1, "rgba(255,230,160,0)");
+      ctx.fillStyle = glowSun;
+      ctx.fillRect(0, 0, W, GY);
+    }
+
+    // floor
+    ctx.fillStyle = "#15111d";
+    ctx.fillRect(-20, GY, W + 40, H - GY + 20);
+    if (dawn > 0) {
+      ctx.fillStyle = "rgba(255,190,110," + (dawn * 0.25) + ")";
+      ctx.fillRect(-20, GY, W + 40, H - GY + 20);
+    }
+    ctx.strokeStyle = "rgba(255,255,255,0.12)";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(-20, GY); ctx.lineTo(W + 20, GY); ctx.stroke();
+
+    // spotlight on the hero
+    var spotA = 0.22 * (1 - dawn * 0.6);
+    var cone = ctx.createLinearGradient(0, 0, 0, GY);
+    cone.addColorStop(0, "rgba(255,240,200," + (spotA + 0.05) + ")");
+    cone.addColorStop(1, "rgba(255,240,200," + (spotA * 0.3) + ")");
+    ctx.fillStyle = cone;
+    ctx.beginPath();
+    ctx.moveTo(HERO_X - 25, -20);
+    ctx.lineTo(HERO_X + 25, -20);
+    ctx.lineTo(HERO_X + 130, GY);
+    ctx.lineTo(HERO_X - 130, GY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,240,200,0.18)";
+    ctx.beginPath(); ctx.ellipse(HERO_X, GY + 8, 110, 16, 0, 0, Math.PI * 2); ctx.fill();
+
+    // red light under the shadow figure when it speaks
+    if (speaker === "doubt") {
+      ctx.fillStyle = "rgba(255,30,70,0.18)";
+      ctx.beginPath(); ctx.ellipse(DOUBT_X, GY + 8, 100, 14, 0, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // rain
+    if (dawn < 1) {
+      ctx.strokeStyle = "rgba(170,190,255," + (0.35 * (1 - dawn)) + ")";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (var r = 0; r < rain.length; r++) {
+        ctx.moveTo(rain[r].x, rain[r].y);
+        ctx.lineTo(rain[r].x - 2, rain[r].y + rain[r].len);
+      }
+      ctx.stroke();
+    }
+
+    // characters
+    drawDoubt(DOUBT_X, GY, doubtAlpha, speaker === "doubt", typing);
+    drawHero(HERO_X, GY, speaker, typing);
+
+    // speech bubbles
+    if (phase === "talk") {
+      if (line.who === "hero") {
+        drawBubble(line.text, charCount, 30, 16, 290, HERO_X, 140,
+                   "#fff8e1", "#f5b52e", "#3b2a00");
+      } else {
+        drawBubble(line.text, charCount, 380, 16, 290, DOUBT_X - 5, 108,
+                   "#2a0a12", "#ff2d4a", "#ffd9df");
+      }
+    }
+
+    // ending message
+    if (phase === "ending") {
+      var ta = Math.min(1, Math.max(0, (endTimer - 100) / 60));
+      if (ta > 0) {
+        ctx.save();
+        ctx.globalAlpha = ta;
+        ctx.textAlign = "center";
+        ctx.shadowColor = "rgba(0,0,0,0.6)";
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = "#fff6dc";
+        ctx.font = "bold 46px Georgia, serif";
+        ctx.fillText("I STILL STAND.", W / 2, 90);
+        ctx.font = "italic 20px Georgia, serif";
+        ctx.fillText("A leg was lost. The fight was not.", W / 2, 128);
+        ctx.restore();
+      }
+    }
+
+    ctx.restore();
+
+    // lightning flash
+    if (flash > 0.01) {
+      ctx.fillStyle = "rgba(255,255,255," + (flash * 0.35) + ")";
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // vignette
+    var vg = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, W * 0.7);
+    vg.addColorStop(0, "rgba(0,0,0,0)");
+    vg.addColorStop(1, "rgba(0,0,0,0.55)");
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+
+    // fade in / fade out
+    var outFade = (phase === "ending" && endTimer > 400) ? (endTimer - 400) / 40 : 0;
+    var cover = Math.max(introFade, Math.min(outFade, 1));
+    if (cover > 0.01) {
+      ctx.fillStyle = "rgba(0,0,0," + cover + ")";
+      ctx.fillRect(0, 0, W, H);
+    }
+  }
+
+  function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  startLine();
+  loop();
+})();
+</script>
+
+</body>
+</html>

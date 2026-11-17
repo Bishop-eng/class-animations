@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Car Rotating on Axis</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #2c3e50;
+    }
+    .turntable {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: #34495e;
+      border: 8px dashed #7f8c8d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    /* Top-down Car */
+    .car-top {
+      width: 100px;
+      height: 200px;
+      background: #e74c3c;
+      border-radius: 25px 25px 15px 15px;
+      position: relative;
+      transform-origin: center center;
+      animation: spinAxis 3s linear infinite;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+    .windshield {
+      width: 80px;
+      height: 45px;
+      background: #3498db;
+      margin: 35px auto 0;
+      border-radius: 15px 15px 5px 5px;
+    }
+    .roof {
+      width: 76px;
+      height: 60px;
+      background: #c0392b;
+      margin: 5px auto;
+      border-radius: 5px;
+    }
+    .rear-window {
+      width: 74px;
+      height: 25px;
+      background: #3498db;
+      margin: 0 auto;
+      border-radius: 5px 5px 10px 10px;
+    }
+    .headlight {
+      width: 18px;
+      height: 10px;
+      background: #f1c40f;
+      position: absolute;
+      top: 5px;
+      border-radius: 5px;
+    }
+    .headlight.left { left: 12px; }
+    .headlight.right { right: 12px; }
+    
+    /* Pivot marker */
+    .axis-dot {
+      width: 10px;
+      height: 10px;
+      background: #2ecc71;
+      border-radius: 50%;
+      position: absolute;
+      top: calc(50% - 5px);
+      left: calc(50% - 5px);
+    }
+
+    @keyframes spinAxis {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="turntable">
+    <div class="car-top">
+      <div class="headlight left"></div>
+      <div class="headlight right"></div>
+      <div class="windshield"></div>
+      <div class="roof"></div>
+      <div class="rear-window"></div>
+      <div class="axis-dot"></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>1 · Cat watching a mouse run around it</title>
+<style>
+
+:root{--bg:#f6f5f1;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e2e0d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}}
+:root[data-theme="dark"]{--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+main{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin:8px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 8px;color:var(--muted);font-weight:600}
+svg{width:100%;height:auto;display:block;border-radius:8px}
+svg text{font-family:system-ui,sans-serif}
+
+
+
+.orbit{animation:spin 5s linear infinite;transform-origin:160px 100px}
+.orbit2{animation:spin 6s linear infinite;transform-origin:160px 100px}
+.pl{animation:spin 5s linear infinite;transform-origin:151px 92px}
+.pr{animation:spin 5s linear infinite;transform-origin:169px 92px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tail{animation:wag 0.5s ease-in-out infinite alternate;transform-origin:233px 104px}
+@keyframes wag{to{transform:rotate(25deg)}}
+
+
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<main>
+<div class="card"><h2>1 · Cat watching a mouse run around it</h2>
+<svg viewBox="0 0 320 200"><rect width="320" height="200" fill="#e9dfc7"/>
+<circle cx="160" cy="100" r="75" fill="none" stroke="#b9a97f" stroke-dasharray="4 6"/>
+<ellipse cx="160" cy="125" rx="26" ry="22" fill="#e08a3c"/>
+<polygon points="140,82 143,62 156,76" fill="#e08a3c"/><polygon points="180,82 177,62 164,76" fill="#e08a3c"/>
+<circle cx="160" cy="95" r="23" fill="#e08a3c"/>
+<circle cx="151" cy="92" r="6" fill="#fff"/><circle cx="169" cy="92" r="6" fill="#fff"/>
+<g class="pl"><circle cx="153.5" cy="92" r="2.8" fill="#111"/></g>
+<g class="pr"><circle cx="171.5" cy="92" r="2.8" fill="#111"/></g>
+<polygon points="157,100 163,100 160,104" fill="#c0504d"/>
+<path d="M144 102h-12M144 106l-11 4M176 102h12M176 106l11 4" stroke="#333" stroke-width="1"/>
+<g class="orbit"><g>
+<path class="tail" d="M233 104q-14 6-22 0" stroke="#c98" stroke-width="2" fill="none"/>
+<ellipse cx="242" cy="100" rx="11" ry="7" fill="#9a9a9a"/><circle cx="251" cy="100" r="5" fill="#9a9a9a"/>
+<circle cx="248" cy="95" r="3" fill="#d9a1a1"/><circle cx="252" cy="101" r="1.2" fill="#111"/>
+</g></g></svg></div>
+</main>
+</body>
+</html>

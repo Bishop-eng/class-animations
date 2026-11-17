@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Car on the same axis</title>
+
+<!--
+=====================================================================
+ ANIMATION 2 - CAR ON THE SAME AXIS   (how to edit)
+=====================================================================
+ Change the values in the block called SETTINGS 2 (inside <script>).
+
+   mode ........................ "orbit" = car circles the axis
+                                 "spin"  = car turns on the spot
+   carColor, trackColor ........ colours
+   lapSeconds .................. seconds per full turn
+   direction ................... 1 = clockwise, -1 = anticlockwise
+   radius ...................... size of the circle (orbit mode)
+   carSize ..................... size of the car
+
+ Page colours are in the CSS under :root (--page-bg, --card-bg, --s2-bg).
+=====================================================================
+-->
+
+<style>
+  :root{
+    --page-bg:#12141a;      /* page background */
+    --card-bg:#1b1e27;      /* box around each animation */
+    --text:#e8e9ee;         /* text colour */
+    --muted:#9a9eb0;        /* small caption colour */
+    --s1-bg:#243042;        /* animation 1 background */
+    --s2-bg:#2b2f3a;        /* animation 2 background */
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:20px 14px 60px;background:var(--page-bg);color:var(--text);
+       font-family:Georgia,"Times New Roman",serif;line-height:1.5}
+  main{max-width:720px;margin:0 auto}
+  h1{font-size:1.5rem;margin:0 0 4px}
+  h2{font-size:1.1rem;margin:0 0 2px}
+  p.cap{margin:0 0 10px;color:var(--muted);font-size:.9rem}
+  section{background:var(--card-bg);border-radius:14px;padding:14px;margin:18px 0}
+  svg{width:100%;height:auto;display:block;border-radius:10px}
+
+  /* ---------- animation 2 shapes ---------- */
+  .floor2{fill:var(--s2-bg)}
+  .track{fill:none;stroke:var(--track);stroke-width:3;stroke-dasharray:10 10}
+  .axis{fill:#ffffff;opacity:.9}
+  .car-body{fill:var(--car)}
+  .car-roof{fill:var(--car);filter:brightness(.8)}
+  .glass{fill:#bfe6ff}
+  .wheel{fill:#0d0d10}
+
+  </style>
+</head>
+<body>
+<main>
+  <!-- ============ ANIMATION 2: CAR ON THE SAME AXIS ============ -->
+  <section>
+    <h2>2. The car on the same axis</h2>
+    <p class="cap">A top view of a car turning about a fixed axis (the white dot).</p>
+    <svg id="s2" viewBox="0 0 400 300">
+      <rect class="floor2" width="400" height="300"/>
+      <circle id="track" class="track"/>
+      <g id="carWrap">
+        <g id="car">
+          <rect class="wheel" x="-26" y="-22" width="16" height="6" rx="2"/>
+          <rect class="wheel" x="14" y="-22" width="16" height="6" rx="2"/>
+          <rect class="wheel" x="-26" y="16" width="16" height="6" rx="2"/>
+          <rect class="wheel" x="14" y="16" width="16" height="6" rx="2"/>
+          <rect class="car-body" x="-38" y="-18" width="76" height="36" rx="11"/>
+          <rect class="car-roof" x="-14" y="-13" width="24" height="26" rx="5"/>
+          <path class="glass" d="M12 -13 L24 -10 L24 10 L12 13 Z"/>
+          <path class="glass" d="M-26 -11 L-16 -12 L-16 12 L-26 11 Z"/>
+          <circle cx="36" cy="-11" r="3" fill="#ffe27a"/><circle cx="36" cy="11" r="3" fill="#ffe27a"/>
+          <circle cx="-36" cy="-11" r="2.5" fill="#e44"/><circle cx="-36" cy="11" r="2.5" fill="#e44"/>
+        </g>
+      </g>
+      <circle class="axis" cx="200" cy="150" r="6"/>
+    </svg>
+  </section>
+</main>
+
+<script>
+/* ===== SETTINGS 2 : car on the same axis ===== */
+const S2 = {
+  mode:       "orbit",    // "orbit" = car circles the axis, "spin" = car turns on the spot
+  carColor:   "#e8453c",  // car colour
+  trackColor: "#ffffff33",// colour of the dashed track
+  lapSeconds: 5,          // seconds per full turn
+  direction:  1,          // 1 = clockwise, -1 = anticlockwise
+  radius:     105,        // size of the circle (orbit mode)
+  carSize:    1.1         // size of the car
+};
+/* ===== end of settings ===== */
+
+(function(){
+  const svg = document.getElementById("s2");
+  svg.style.setProperty("--car", S2.carColor);
+  svg.style.setProperty("--track", S2.trackColor);
+  const CX = 200, CY = 150;
+  const tr = document.getElementById("track");
+  tr.setAttribute("cx",CX); tr.setAttribute("cy",CY); tr.setAttribute("r",S2.radius);
+  if (S2.mode === "spin") tr.style.display = "none";
+  const wrap = document.getElementById("carWrap");
+
+  function frame(ms){
+    const a = S2.direction * (ms/1000) * 360 / S2.lapSeconds;   // degrees
+    if (S2.mode === "spin"){
+      wrap.setAttribute("transform",`translate(${CX} ${CY}) rotate(${a}) scale(${S2.carSize})`);
+    } else {
+      const r = a*Math.PI/180;
+      const x = CX + S2.radius*Math.cos(r), y = CY + S2.radius*Math.sin(r);
+      const heading = a + 90*S2.direction;   // car points along the track
+      wrap.setAttribute("transform",`translate(${x} ${y}) rotate(${heading}) scale(${S2.carSize})`);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2 · Car rotating about the same axis</title>
+<style>
+
+:root{--bg:#f6f5f1;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e2e0d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}}
+:root[data-theme="dark"]{--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+main{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin:8px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 8px;color:var(--muted);font-weight:600}
+svg{width:100%;height:auto;display:block;border-radius:8px}
+svg text{font-family:system-ui,sans-serif}
+
+
+
+.orbit{animation:spin 5s linear infinite;transform-origin:160px 100px}
+.orbit2{animation:spin 6s linear infinite;transform-origin:160px 100px}
+.pl{animation:spin 5s linear infinite;transform-origin:151px 92px}
+.pr{animation:spin 5s linear infinite;transform-origin:169px 92px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tail{animation:wag 0.5s ease-in-out infinite alternate;transform-origin:233px 104px}
+@keyframes wag{to{transform:rotate(25deg)}}
+
+
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<main>
+<div class="card"><h2>2 · Car rotating about the same axis</h2>
+<svg viewBox="0 0 320 200"><rect width="320" height="200" fill="#cfd8dc"/>
+<circle cx="160" cy="100" r="75" fill="none" stroke="#fff" stroke-width="22" opacity=".6"/>
+<circle cx="160" cy="100" r="75" fill="none" stroke="#78909c" stroke-width="1.5" stroke-dasharray="6 8"/>
+<circle cx="160" cy="100" r="5" fill="#455a64"/>
+<g class="orbit2">
+<rect x="221" y="90" width="5" height="9" rx="1" fill="#222"/><rect x="244" y="90" width="5" height="9" rx="1" fill="#222"/>
+<rect x="221" y="106" width="5" height="9" rx="1" fill="#222"/><rect x="244" y="106" width="5" height="9" rx="1" fill="#222"/>
+<rect x="223" y="82" width="24" height="42" rx="8" fill="#d32f2f"/>
+<rect x="226" y="98" width="18" height="12" rx="3" fill="#b71c1c"/>
+<path d="M226 94l2-8h14l2 8z" fill="#90caf9"/>
+<rect x="227" y="112" width="16" height="5" rx="1" fill="#90caf9"/>
+<circle cx="227" cy="123" r="2" fill="#fff59d"/><circle cx="243" cy="123" r="2" fill="#fff59d"/>
+</g></svg></div>
+</main>
+</body>
+</html>

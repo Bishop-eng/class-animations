@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cat and Mouse</title>
+<style>
+  body { margin: 0; background: #222; }
+  canvas { display: block; margin: 20px auto; background: #f5e6c8; border: 2px solid #000; }
+</style>
+</head>
+<body>
+<canvas id="c" width="600" height="600"></canvas>
+<script>
+const canvas = document.getElementById("c"); // the drawing area
+const ctx = canvas.getContext("2d"); // the 2D drawing tool
+
+const cx = 300, cy = 300;     // cat sits at the centre
+const runRadius = 200;        // distance of the mouse's circular path
+let angle = 0;                // mouse's angle on its path
+let t = 0;                    // time counter (used for tail wag)
+
+function drawCat(mx, my) {    // mx,my = mouse position (cat's eyes follow it)
+  // tail: sways using a sine wave
+  ctx.strokeStyle = "#e08a2c";
+  ctx.lineWidth = 14;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx + 45, cy + 40);
+  ctx.quadraticCurveTo(cx + 110, cy + 40 + Math.sin(t * 3) * 30, cx + 100, cy - 30);
+  ctx.stroke();
+
+  // body
+  ctx.fillStyle = "#e08a2c";
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + 45, 55, 50, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // ears (triangles)
+  ctx.beginPath();
+  ctx.moveTo(cx - 45, cy - 30); ctx.lineTo(cx - 40, cy - 85); ctx.lineTo(cx - 10, cy - 45);
+  ctx.moveTo(cx + 45, cy - 30); ctx.lineTo(cx + 40, cy - 85); ctx.lineTo(cx + 10, cy - 45);
+  ctx.fill();
+
+  // head
+  ctx.beginPath();
+  ctx.arc(cx, cy - 10, 48, 0, Math.PI * 2);
+  ctx.fill();
+
+  // eyes: white part, then pupil shifted toward the mouse
+  const dx = mx - cx, dy = my - (cy - 20);
+  const len = Math.hypot(dx, dy);                  // distance to the mouse
+  const px = (dx / len) * 6, py = (dy / len) * 6;  // unit direction * 6px = pupil offset
+  [-18, 18].forEach(ox => {
+    ctx.fillStyle = "#fff";
+    ctx.beginPath(); ctx.ellipse(cx + ox, cy - 20, 11, 14, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#000";
+    ctx.beginPath(); ctx.ellipse(cx + ox + px, cy - 20 + py, 4, 9, 0, 0, Math.PI * 2); ctx.fill();
+  });
+
+  // nose and whiskers
+  ctx.fillStyle = "#ff7d9c";
+  ctx.beginPath(); ctx.moveTo(cx - 5, cy); ctx.lineTo(cx + 5, cy); ctx.lineTo(cx, cy + 7); ctx.fill();
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(cx - 15, cy + 5); ctx.lineTo(cx - 55, cy);
+  ctx.moveTo(cx - 15, cy + 10); ctx.lineTo(cx - 55, cy + 15);
+  ctx.moveTo(cx + 15, cy + 5); ctx.lineTo(cx + 55, cy);
+  ctx.moveTo(cx + 15, cy + 10); ctx.lineTo(cx + 55, cy + 15);
+  ctx.stroke();
+}
+
+function drawMouse(x, y, heading) {
+  ctx.save();
+  ctx.translate(x, y);          // move origin to the mouse
+  ctx.rotate(heading);          // turn it to face its running direction
+  // tail
+  ctx.strokeStyle = "#e9a0b0"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-18, 0);
+  ctx.quadraticCurveTo(-35, Math.sin(t * 10) * 8, -45, 0); ctx.stroke();
+  // body
+  ctx.fillStyle = "#999";
+  ctx.beginPath(); ctx.ellipse(0, 0, 20, 11, 0, 0, Math.PI * 2); ctx.fill();
+  // ears
+  ctx.fillStyle = "#e9a0b0";
+  ctx.beginPath(); ctx.arc(8, -9, 6, 0, Math.PI * 2); ctx.arc(8, 9, 6, 0, Math.PI * 2); ctx.fill();
+  // eye and nose
+  ctx.fillStyle = "#000";
+  ctx.beginPath(); ctx.arc(13, -4, 2, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#ff4d6d";
+  ctx.beginPath(); ctx.arc(21, 0, 3, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();                // undo translate/rotate
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // erase previous frame
+
+  // dashed path to show the mouse's route
+  ctx.strokeStyle = "rgba(0,0,0,0.2)"; ctx.setLineDash([8, 8]); ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(cx, cy, runRadius, 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // mouse position on the circle (same trigonometry as the moon)
+  const mx = cx + runRadius * Math.cos(angle);
+  const my = cy + runRadius * Math.sin(angle);
+
+  drawCat(mx, my);                          // cat watches the mouse
+  drawMouse(mx, my, angle + Math.PI / 2);   // heading = tangent to the circle
+
+  angle += 0.03;                // mouse speed
+  t += 0.03;                    // time for tail wag
+  requestAnimationFrame(animate); // next frame
+}
+animate();
+</script>
+</body>
+</html>

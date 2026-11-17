@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3D</title><style>*{margin:0;box-sizing:border-box}body{height:100vh;overflow:hidden;perspective:900px;background:#dfeaff;font-family:sans-serif}.scene{position:absolute;left:50%;top:55%;transform-style:preserve-3d}.floor{position:absolute;width:1000px;height:1000px;left:-500px;top:-500px;background:conic-gradient(#2b2d42 25%,#3d405b 0 50%,#2b2d42 0 75%,#3d405b 0) 0 0/100px 100px}.wh{position:absolute;width:28px;height:28px;left:-14px;top:-14px;border-radius:50%;background:linear-gradient(90deg,#111 45%,#aaa 45% 55%,#111 55%);animation:wspin .5s linear infinite}@keyframes wspin{to{transform:rotate(360deg)}}@keyframes spinY{to{transform:rotateY(360deg)}}@keyframes drive{from{transform:translateX(-450px)}to{transform:translateX(450px)}}
+body{background:#07070d;color:#fff;transition:background .1s}body.flash{background:#dfe6ff}
+#s{top:68%;animation:cam 12s ease-in-out infinite alternate}
+.floor{background:#14141f}.hd{position:absolute;left:-22px;top:-22px;width:44px;height:44px;border-radius:50%}
+.in{transition:transform .5s}.in.on{transform:scale3d(1.15,1.15,1.15)}.on .pa{animation:wave .7s ease-in-out infinite alternate}
+@keyframes wave{to{transform:rotateX(-70deg)}}@keyframes cam{from{transform:rotateX(-12deg) rotateY(-20deg)}to{transform:rotateX(-12deg) rotateY(20deg)}}
+#box{position:absolute;top:9vh;left:50%;transform:translateX(-50%);width:min(88vw,520px);text-align:center;font-size:clamp(18px,4.5vw,26px);font-style:italic;min-height:90px;text-shadow:0 0 12px #fff6}
+</style></head><body><div id="box"></div><div class="scene" id="s"></div><script>
+var s=document.getElementById('s');
+function box(w,h,d,c){var e=document.createElement('div');e.style.cssText='position:absolute;left:0;top:0;transform-style:preserve-3d';
+[[w,h,'translateZ('+d/2+'px)',1],[w,h,'rotateY(180deg) translateZ('+d/2+'px)',.7],[d,h,'rotateY(90deg) translateZ('+w/2+'px)',.85],[d,h,'rotateY(-90deg) translateZ('+w/2+'px)',.85],[w,d,'rotateX(90deg) translateZ('+h/2+'px)',1.2],[w,d,'rotateX(-90deg) translateZ('+h/2+'px)',.6]].forEach(function(f){var q=document.createElement('div');q.style.cssText='position:absolute;width:'+f[0]+'px;height:'+f[1]+'px;left:'+(-f[0]/2)+'px;top:'+(-f[1]/2)+'px;background:'+c+';filter:brightness('+f[3]+');backface-visibility:hidden;transform:'+f[2];e.appendChild(q)});return e}
+function put(p,e,x,y,z){e.style.transform='translate3d('+x+'px,'+y+'px,'+z+'px)';p.appendChild(e);return e}
+function grp(p){var g=document.createElement('div');g.style.cssText='position:absolute;left:0;top:0;transform-style:preserve-3d';p.appendChild(g);return g}
+function floor(y){var f=document.createElement('div');f.className='floor';f.style.transform='translateY('+y+'px) rotateX(90deg)';s.appendChild(f);return f}
+function car(){var g=grp(s);put(g,box(140,30,70,'#d62828'),0,-29,0);put(g,box(70,26,56,'#9d0208'),-10,-57,0);put(g,box(4,8,10,'#ffd60a'),70,-32,-20);put(g,box(4,8,10,'#ffd60a'),70,-32,20);
+[[-45,-37],[45,-37],[-45,37],[45,37]].forEach(function(p){var w=put(g,document.createElement('div'),p[0],-14,p[1]);w.style.cssText+=';position:absolute;transform-style:preserve-3d';var d=document.createElement('div');d.className='wh';w.appendChild(d)});return g}
+function spot(x){var d=document.createElement('div');d.style.cssText='position:absolute;width:300px;height:300px;left:'+(x-150)+'px;top:-150px;border-radius:50%;background:radial-gradient(#fffa,#0000 70%);transform:translateY(-1px) rotateX(90deg);transition:opacity .5s;opacity:0';s.appendChild(d);return d}
+function person(x,c,skin){var o=put(s,grp(s),x,0,0);var i=grp(o);i.className='in';put(i,box(64,80,34,c),0,-40,0);
+var h=document.createElement('div');h.className='hd';h.style.background='radial-gradient(circle at 35% 30%,'+skin+',#000 130%)';put(i,h,0,-102,0);
+[-1,1].forEach(function(k){var p=put(i,grp(i),k*38,-76,0);var a=grp(p);a.className='pa';put(a,box(12,50,12,c),0,25,0)});return i}
+var me=person(-130,'#e63946','#c68642'),you=person(130,'#4361ee','#8d5524'),sm=spot(-130),sy=spot(130);floor(0);
+var L=[["you","Why do you keep going? Look at what you've lost."],["me","I didn't lose my way. I lost my legs."],["you","The world isn't built for you."],["me","Then I'll build my own road."],["you","...And if you fall?"],["me","I've fallen before. I always rise. ⚡"],["you","Then teach me how."],["me","Start by never asking for permission."]];
+var box1=document.getElementById('box'),n=0;
+function say(){var l=L[n%L.length],w=l[0],t=l[1];me.classList.toggle('on',w=='me');you.classList.toggle('on',w=='you');sm.style.opacity=w=='me'?1:0;sy.style.opacity=w=='you'?1:0;
+if(t.indexOf('⚡')>-1){document.body.classList.add('flash');setTimeout(function(){document.body.classList.remove('flash')},120)}
+box1.style.color=w=='me'?'#ff8d96':'#9db0ff';box1.textContent='';var k=0,iv=setInterval(function(){box1.textContent=t.slice(0,++k);if(k>=t.length)clearInterval(iv)},45);n++;setTimeout(say,t.length*45+1800)}
+say();
+</script></body></html>

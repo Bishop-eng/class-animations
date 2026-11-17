@@ -1,0 +1,89 @@
+<!DOCTYPE html> <!-- tells the browser this is an HTML5 page -->
+<html> <!-- root element of the page -->
+<head> <!-- holds page settings, not visible content -->
+<title>Moving Car</title> <!-- text shown on the browser tab -->
+<style> /* CSS styling starts */
+  body { margin: 0; background: #222; } /* remove default margin, dark grey background */
+  canvas { display: block; margin: 20px auto; background: #87ceeb; border: 2px solid #000; } /* centre the canvas, sky-blue background, black border */
+</style> <!-- CSS styling ends -->
+</head> <!-- end of head -->
+<body> <!-- visible content starts -->
+<canvas id="c" width="800" height="400"></canvas> <!-- the drawing area: 800px wide, 400px tall -->
+<script> // JavaScript starts
+const canvas = document.getElementById("c"); // grab the canvas element from the page
+const ctx = canvas.getContext("2d"); // get the 2D "pen" used to draw shapes
+
+let carX = -150; // car's x position; starts off-screen on the left
+const carY = 250; // car's y position (fixed, because it only moves sideways)
+const speed = 3; // pixels the car moves every frame
+let wheelAngle = 0; // current rotation angle of the wheels (radians)
+
+function drawRoad() { // draws the background road
+  ctx.fillStyle = "#444"; // dark grey
+  ctx.fillRect(0, 310, canvas.width, 90); // road: x=0, y=310, full width, 90px tall
+  ctx.fillStyle = "#fff"; // white
+  for (let i = 0; i < canvas.width; i += 80) { // loop across the screen in steps of 80px
+    ctx.fillRect(i, 352, 40, 6); // one white dash of the lane line
+  } // end loop
+  ctx.fillStyle = "#4caf50"; // green
+  ctx.fillRect(0, 300, canvas.width, 10); // grass strip above the road
+} // end drawRoad
+
+function drawWheel(x, y) { // draws one wheel centred at (x, y)
+  ctx.save(); // save canvas state so rotation doesn't affect other drawings
+  ctx.translate(x, y); // move the origin (0,0) to the wheel's centre
+  ctx.rotate(wheelAngle); // rotate everything drawn next by wheelAngle
+  ctx.fillStyle = "#111"; // near-black tyre
+  ctx.beginPath(); // start a new shape
+  ctx.arc(0, 0, 20, 0, Math.PI * 2); // circle of radius 20 (full circle = 2*PI)
+  ctx.fill(); // fill the circle
+  ctx.fillStyle = "#bbb"; // light grey hubcap
+  ctx.beginPath(); // start another shape
+  ctx.arc(0, 0, 10, 0, Math.PI * 2); // smaller circle of radius 10
+  ctx.fill(); // fill it
+  ctx.strokeStyle = "#444"; // colour for spokes
+  ctx.lineWidth = 3; // line thickness
+  ctx.beginPath(); // start the spokes path
+  ctx.moveTo(-10, 0); ctx.lineTo(10, 0); // horizontal spoke
+  ctx.moveTo(0, -10); ctx.lineTo(0, 10); // vertical spoke
+  ctx.stroke(); // draw the spoke lines
+  ctx.restore(); // undo translate and rotate
+} // end drawWheel
+
+function drawCar(x, y) { // draws the whole car with its top-left at (x, y)
+  ctx.fillStyle = "red"; // body colour
+  ctx.fillRect(x, y, 140, 40); // main body 140 wide, 40 tall
+  ctx.fillStyle = "darkred"; // cabin colour
+  ctx.beginPath(); // start the cabin shape
+  ctx.moveTo(x + 30, y); // bottom-left of cabin
+  ctx.lineTo(x + 50, y - 35); // up to top-left
+  ctx.lineTo(x + 100, y - 35); // across to top-right
+  ctx.lineTo(x + 120, y); // down to bottom-right
+  ctx.closePath(); // connect back to start
+  ctx.fill(); // fill the cabin
+  ctx.fillStyle = "#cfefff"; // light blue glass
+  ctx.fillRect(x + 55, y - 30, 20, 25); // rear window
+  ctx.fillRect(x + 80, y - 30, 20, 25); // front window
+  ctx.fillStyle = "yellow"; // headlight colour
+  ctx.fillRect(x + 132, y + 10, 8, 10); // headlight
+  drawWheel(x + 35, y + 42); // rear wheel
+  drawWheel(x + 105, y + 42); // front wheel
+} // end drawCar
+
+function animate() { // animation loop, runs about 60 times per second
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // erase the previous frame
+  drawRoad(); // draw the road (background)
+  drawCar(carX, carY); // draw the car at its current position
+
+  carX += speed; // move the car right
+  wheelAngle += 0.15; // rotate the wheels a little
+
+  if (carX > canvas.width) { // has the car left the right edge?
+    carX = -150; // put it back off-screen on the left
+  } // end if
+  requestAnimationFrame(animate); // ask the browser to call animate for the next frame
+} // end animate
+animate(); // start the animation
+</script> <!-- JavaScript ends -->
+</body> <!-- end of body -->
+</html> <!-- end of page -->

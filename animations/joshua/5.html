@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Realistic Cat Watching Orbiting Mouse</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Realistic warm wood/stone floor radial lighting */
+      background: radial-gradient(circle at center, #d7ccc8 0%, #8d6e63 60%, #4e342e 100%);
+      overflow: hidden;
+    }
+
+    .arena {
+      position: relative;
+      width: 550px;
+      height: 550px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Subtle circular track mark on floor */
+    .track-shadow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.15), 0 0 25px rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+
+    /* Cat Container */
+    .cat-wrapper {
+      position: relative;
+      width: 210px;
+      height: 210px;
+      z-index: 2;
+      filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.45));
+    }
+
+    /* Realistic Eyes Overlay */
+    .eyes-container {
+      position: absolute;
+      top: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 112px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 5;
+    }
+
+    .eye {
+      width: 40px;
+      height: 36px;
+      border-radius: 50% 50% 48% 48%;
+      /* Realistic amber/green feline iris gradient */
+      background: radial-gradient(circle at 50% 50%, #dce775 20%, #9e9d24 65%, #33691e 95%);
+      box-shadow: 
+        inset 0 4px 6px rgba(0, 0, 0, 0.7),
+        0 2px 4px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid #1a1a1a;
+    }
+
+    .pupil {
+      width: 11px;
+      height: 27px;
+      background: #050505;
+      border-radius: 50%;
+      position: absolute;
+      top: 4.5px;
+      left: 14.5px;
+      box-shadow: 0 0 3px #000;
+    }
+
+    /* Glossy wet-eye light reflection */
+    .eye::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      top: 6px;
+      left: 8px;
+      pointer-events: none;
+    }
+
+    /* Mouse Container */
+    .mouse-wrapper {
+      position: absolute;
+      width: 95px;
+      height: 50px;
+      z-index: 3;
+      filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.4));
+      transform-origin: center center;
+    }
+
+    /* Tail wiggle animation */
+    .mouse-tail {
+      transform-origin: 35px 25px;
+      animation: tailWiggle 0.25s ease-in-out infinite alternate;
+    }
+
+    @keyframes tailWiggle {
+      0% { transform: rotate(-6deg); }
+      100% { transform: rotate(6deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="arena" id="arena">
+    <div class="track-shadow"></div>
+
+    <!-- Realistic Tabby Cat SVG -->
+    <div class="cat-wrapper" id="cat">
+      <svg viewBox="0 0 220 220" width="210" height="210">
+        <defs>
+          <!-- Fur Gradients -->
+          <radialGradient id="furBase" cx="50%" cy="45%" r="55%">
+            <stop offset="0%" stop-color="#8d6e63" />
+            <stop offset="55%" stop-color="#5d4037" />
+            <stop offset="100%" stop-color="#261815" />
+          </radialGradient>
+          <radialGradient id="muzzleFur" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f5f5f5" />
+            <stop offset="70%" stop-color="#d7ccc8" />
+            <stop offset="100%" stop-color="#8d6e63" />
+          </radialGradient>
+          <linearGradient id="earInner" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#f8bbd0" />
+            <stop offset="100%" stop-color="#c2185b" />
+          </linearGradient>
+          <radialGradient id="noseGrad" cx="40%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#ff8a80" />
+            <stop offset="100%" stop-color="#b71c1c" />
+          </radialGradient>
+        </defs>
+
+        <!-- Left Ear -->
+        <path d="M 35 80 L 22 15 L 82 48 Z" fill="#3e2723" stroke="#1a100e" stroke-width="2"/>
+        <path d="M 40 72 L 30 28 L 72 52 Z" fill="url(#earInner)" opacity="0.85"/>
+
+        <!-- Right Ear -->
+        <path d="M 185 80 L 198 15 L 138 48 Z" fill="#3e2723" stroke="#1a100e" stroke-width="2"/>
+        <path d="M 180 72 L 190 28 L 148 52 Z" fill="url(#earInner)" opacity="0.85"/>
+
+        <!-- Main Head Contour with Fluffy Cheeks -->
+        <path d="M 42 75 
+                 C 20 110, 18 150, 48 175 
+                 C 75 198, 145 198, 172 175 
+                 C 202 150, 200 110, 178 75 
+                 C 155 40, 65 40, 42 75 Z" 
+              fill="url(#furBase)" />
+
+        <!-- Tabby Forehead "M" Stripes -->
+        <path d="M 78 52 L 88 72 L 100 58 L 110 72 L 120 58 L 132 72 L 142 52" 
+              fill="none" stroke="#1c110e" stroke-width="4" stroke-linecap="round" opacity="0.75"/>
+        <path d="M 95 45 L 110 62 L 125 45" 
+              fill="none" stroke="#1c110e" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+
+        <!-- Cheek Stripes -->
+        <path d="M 32 128 Q 52 132 62 140" fill="none" stroke="#1c110e" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+        <path d="M 30 142 Q 50 146 60 152" fill="none" stroke="#1c110e" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+        <path d="M 188 128 Q 168 132 158 140" fill="none" stroke="#1c110e" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+        <path d="M 190 142 Q 170 146 160 152" fill="none" stroke="#1c110e" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+
+        <!-- Muzzle & Chin -->
+        <ellipse cx="94" cy="155" rx="22" ry="17" fill="url(#muzzleFur)" />
+        <ellipse cx="126" cy="155" rx="22" ry="17" fill="url(#muzzleFur)" />
+        <ellipse cx="110" cy="172" rx="18" ry="12" fill="#e0e0e0" />
+
+        <!-- Mouth Line -->
+        <path d="M 110 150 L 110 162 Q 98 170 88 162 M 110 162 Q 122 170 132 162" 
+              fill="none" stroke="#3e2723" stroke-width="2.5" stroke-linecap="round"/>
+
+        <!-- Realistic Textured Nose -->
+        <path d="M 98 138 Q 110 134 122 138 Q 118 150 110 152 Q 102 150 98 138 Z" 
+              fill="url(#noseGrad)" stroke="#4e0000" stroke-width="1"/>
+
+        <!-- Whisker Follicle Dots -->
+        <circle cx="88" cy="152" r="1.5" fill="#4e342e"/>
+        <circle cx="82" cy="157" r="1.5" fill="#4e342e"/>
+        <circle cx="92" cy="160" r="1.5" fill="#4e342e"/>
+        <circle cx="132" cy="152" r="1.5" fill="#4e342e"/>
+        <circle cx="138" cy="157" r="1.5" fill="#4e342e"/>
+        <circle cx="128" cy="160" r="1.5" fill="#4e342e"/>
+
+        <!-- Whiskers -->
+        <g stroke="#ffffff" stroke-width="1.4" opacity="0.85" fill="none">
+          <path d="M 86 152 Q 40 142 8 148" />
+          <path d="M 84 158 Q 38 156 5 166" />
+          <path d="M 88 163 Q 45 170 15 184" />
+          
+          <path d="M 134 152 Q 180 142 212 148" />
+          <path d="M 136 158 Q 182 156 215 166" />
+          <path d="M 132 163 Q 175 170 205 184" />
+        </g>
+      </svg>
+
+      <!-- Dynamic Tracking Eyes -->
+      <div class="eyes-container">
+        <div class="eye"><div class="pupil"></div></div>
+        <div class="eye"><div class="pupil"></div></div>
+      </div>
+    </div>
+
+    <!-- Realistic Top-Down Mouse SVG -->
+    <div class="mouse-wrapper" id="mouse">
+      <svg viewBox="0 0 110 55" width="95" height="50">
+        <defs>
+          <radialGradient id="mouseFur" cx="60%" cy="45%" r="55%">
+            <stop offset="0%" stop-color="#9e9e9e" />
+            <stop offset="65%" stop-color="#616161" />
+            <stop offset="100%" stop-color="#333333" />
+          </radialGradient>
+        </defs>
+
+        <!-- Pink Segmented Tail -->
+        <path class="mouse-tail" d="M 38 27 Q 18 18 4 28" 
+              fill="none" stroke="#f48fb1" stroke-width="3.2" stroke-linecap="round" />
+
+        <!-- Tiny Pink Feet -->
+        <ellipse cx="48" cy="12" rx="5" ry="3" fill="#f8bbd0" />
+        <ellipse cx="48" cy="42" rx="5" ry="3" fill="#f8bbd0" />
+        <ellipse cx="75" cy="14" rx="4" ry="2.5" fill="#f8bbd0" />
+        <ellipse cx="75" cy="40" rx="4" ry="2.5" fill="#f8bbd0" />
+
+        <!-- Tear-drop Mouse Body -->
+        <path d="M 35 27 
+                 C 35 12, 60 10, 78 17 
+                 C 90 21, 98 25, 102 27 
+                 C 98 29, 90 33, 78 37 
+                 C 60 44, 35 42, 35 27 Z" 
+              fill="url(#mouseFur)" />
+
+        <!-- Rounded Mouse Ears -->
+        <ellipse cx="73" cy="14" rx="6" ry="7.5" transform="rotate(-25 73 14)" fill="#757575" stroke="#424242" stroke-width="1"/>
+        <ellipse cx="73" cy="14" rx="4" ry="5" transform="rotate(-25 73 14)" fill="#f48fb1" />
+
+        <ellipse cx="73" cy="40" rx="6" ry="7.5" transform="rotate(25 73 40)" fill="#757575" stroke="#424242" stroke-width="1"/>
+        <ellipse cx="73" cy="40" rx="4" ry="5" transform="rotate(25 73 40)" fill="#f48fb1" />
+
+        <!-- Beady Black Eyes -->
+        <circle cx="87" cy="21" r="2.3" fill="#000" />
+        <circle cx="87.6" cy="20.4" r="0.7" fill="#fff" />
+        <circle cx="87" cy="33" r="2.3" fill="#000" />
+        <circle cx="87.6" cy="32.4" r="0.7" fill="#fff" />
+
+        <!-- Pink Twitching Nose -->
+        <circle cx="102" cy="27" r="2.5" fill="#f06292" />
+
+        <!-- Delicate Mouse Whiskers -->
+        <g stroke="#e0e0e0" stroke-width="0.8" opacity="0.8">
+          <line x1="97" y1="24" x2="106" y2="14" />
+          <line x1="98" y1="25" x2="108" y2="19" />
+          <line x1="97" y1="30" x2="106" y2="40" />
+          <line x1="98" y1="29" x2="108" y2="35" />
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    const mouse = document.getElementById('mouse');
+    const pupils = document.querySelectorAll('.pupil');
+    const arena = document.getElementById('arena');
+    
+    let angle = 0;
+    const radius = 200;
+
+    function animate() {
+      // Scurrying speed with slight organic variation
+      angle += 0.032;
+
+      const centerX = arena.offsetWidth / 2;
+      const centerY = arena.offsetHeight / 2;
+
+      // Orbit position + slight body scurry wobble
+      const scurryWobble = Math.sin(angle * 18) * 1.5;
+      const mouseX = centerX + (radius + scurryWobble) * Math.cos(angle);
+      const mouseY = centerY + (radius + scurryWobble) * Math.sin(angle);
+
+      mouse.style.left = `${mouseX - 47.5}px`;
+      mouse.style.top = `${mouseY - 25}px`;
+
+      // Rotate mouse nose forward along the circular tangent
+      const deg = (angle * 180 / Math.PI) + 90;
+      mouse.style.transform = `rotate(${deg}deg)`;
+
+      // Calculate exact tracking vector for each cat eye
+      const mouseRect = mouse.getBoundingClientRect();
+      const mouseCenterX = mouseRect.left + mouseRect.width / 2;
+      const mouseCenterY = mouseRect.top + mouseRect.height / 2;
+
+      pupils.forEach(pupil => {
+        const eyeRect = pupil.parentElement.getBoundingClientRect();
+        const eyeCenterX = eyeRect.left + eyeRect.width / 2;
+        const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+
+        const trackAngle = Math.atan2(mouseCenterY - eyeCenterY, mouseCenterX - eyeCenterX);
+        const moveX = Math.cos(trackAngle) * 8.5;
+        const moveY = Math.sin(trackAngle) * 4.5;
+
+        pupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

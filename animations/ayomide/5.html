@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rotating Car</title>
+<style>
+  body { margin: 0; background: #222; }
+  canvas { display: block; margin: 20px auto; background: #7a7a7a; border: 2px solid #000; }
+</style>
+</head>
+<body>
+<canvas id="c" width="600" height="600"></canvas>
+<script>
+const canvas = document.getElementById("c"); // the drawing area
+const ctx = canvas.getContext("2d"); // the 2D drawing tool
+
+const cx = 300, cy = 300;     // the shared axis (same point as the cat)
+const radius = 180;           // distance from the axis to the car
+const spinInPlace = false;    // true = car spins on the axis itself
+let angle = 0;                // current rotation angle
+let wheelAngle = 0;           // wheel spin
+
+function drawWheel(x, y) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(wheelAngle);
+  ctx.fillStyle = "#111";
+  ctx.fillRect(-12, -6, 24, 12);        // tyre seen from above
+  ctx.fillStyle = "#bbb";
+  ctx.fillRect(-4, -6, 8, 12);          // marker so the spin is visible
+  ctx.restore();
+}
+
+function drawCar() {                     // car drawn around (0,0), facing right
+  ctx.fillStyle = "#d62828";
+  ctx.fillRect(-60, -25, 120, 50);       // body (top view)
+  ctx.fillStyle = "#8f1a1a";
+  ctx.fillRect(-20, -20, 40, 40);        // roof
+  ctx.fillStyle = "#cfefff";
+  ctx.fillRect(22, -18, 12, 36);         // windscreen
+  ctx.fillStyle = "yellow";
+  ctx.fillRect(55, -20, 5, 10);          // headlights
+  ctx.fillRect(55, 10, 5, 10);
+  drawWheel(-38, -28); drawWheel(-38, 28);   // rear wheels
+  drawWheel(38, -28);  drawWheel(38, 28);    // front wheels
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // erase previous frame
+
+  // draw the circular track
+  ctx.strokeStyle = "#fff"; ctx.setLineDash([20, 20]); ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // mark the axis
+  ctx.fillStyle = "#ff0"; ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2); ctx.fill();
+
+  ctx.save();
+  if (spinInPlace) {
+    ctx.translate(cx, cy);                 // car sits on the axis
+    ctx.rotate(angle);                     // and spins around it
+  } else {
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    ctx.translate(x, y);                   // move to the point on the circle
+    ctx.rotate(angle + Math.PI / 2);       // face along the direction of travel
+  }
+  drawCar();
+  ctx.restore();
+
+  angle += 0.02;                           // rotation speed
+  wheelAngle += 0.2;                       // wheel spin speed
+  requestAnimationFrame(animate);          // next frame
+}
+animate();
+</script>
+</body>
+</html>

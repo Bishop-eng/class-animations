@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rotating Car</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+
+<div style="text-align:center; font-family:Arial, sans-serif;">
+  <canvas id="carCanvas" width="500" height="500"
+          style="background:#eef2f7; border:2px solid #444; border-radius:12px;"></canvas>
+  <p>🚗 The car rotating about its own center axis</p>
+</div>
+
+<script>
+(function () {
+  var canvas = document.getElementById("carCanvas");
+  var ctx = canvas.getContext("2d");
+  var CX = 250, CY = 250;
+  var angle = 0;
+
+  // Helper: rounded rectangle path
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawTurntable() {
+    ctx.fillStyle = "#d9e0ea";
+    ctx.beginPath(); ctx.arc(CX, CY, 170, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#9aa7b8";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.save();
+    ctx.setLineDash([6, 8]);
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(CX, CY, 140, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawCar() {
+    // Wheels (drawn first, so they sit under the body)
+    ctx.fillStyle = "#222";
+    rr(22, -37, 28, 10, 3);  ctx.fill();   // front left
+    rr(22, 27, 28, 10, 3);   ctx.fill();   // front right
+    rr(-50, -37, 28, 10, 3); ctx.fill();   // rear left
+    rr(-50, 27, 28, 10, 3);  ctx.fill();   // rear right
+
+    // Body
+    ctx.fillStyle = "#d32f2f";
+    rr(-65, -28, 130, 56, 16); ctx.fill();
+
+    // Windshield and rear window
+    ctx.fillStyle = "#9fd3f5";
+    ctx.beginPath();
+    ctx.moveTo(26, -20); ctx.lineTo(42, -15); ctx.lineTo(42, 15); ctx.lineTo(26, 20);
+    ctx.closePath(); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-26, -20); ctx.lineTo(-40, -14); ctx.lineTo(-40, 14); ctx.lineTo(-26, 20);
+    ctx.closePath(); ctx.fill();
+
+    // Roof
+    ctx.fillStyle = "#b71c1c";
+    rr(-26, -20, 52, 40, 8); ctx.fill();
+
+    // Headlights
+    ctx.fillStyle = "#fff176";
+    ctx.beginPath(); ctx.arc(61, -17, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(61, 17, 5, 0, Math.PI * 2); ctx.fill();
+
+    // Taillights
+    ctx.fillStyle = "#ff8a80";
+    rr(-64, -21, 4, 9, 1); ctx.fill();
+    rr(-64, 12, 4, 9, 1);  ctx.fill();
+  }
+
+  function animate() {
+    angle += 0.02;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawTurntable();
+
+    // Rotate the car about the center of the canvas
+    ctx.save();
+    ctx.translate(CX, CY);
+    ctx.rotate(angle);
+    drawCar();
+    ctx.restore();
+
+    // Center axis dot
+    ctx.fillStyle = "#333";
+    ctx.beginPath(); ctx.arc(CX, CY, 4, 0, Math.PI * 2); ctx.fill();
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+</script>
+
+</body>
+</html>

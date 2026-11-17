@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPE505 - Bouncing ball</title>
+
+<!--
+  HOW TO EDIT THIS FILE
+  Change the values under "Settings for the ball" in the script: BALL_COLOR, BALL_RADIUS, GRAVITY, BOUNCE_SPEED and BALL_SIDE_SPEED.
+  Page colours are in the CSS below (the body rule).
+-->
+
+<style>
+  body { margin: 0; padding: 16px; background: rgb(242, 238, 238); color: midnightblue;
+         font-family: system-ui, sans-serif; }
+  h1 { text-align: center; font-size: 22px; margin: 4px 0 16px; }
+
+  /* The animation sits in one card (section), centred on the page. */
+  section { max-width: 520px; margin: 0 auto; background: white; border: 1px solid lightgray;
+            border-radius: 12px; padding: 12px; }
+  h2 { margin: 0 0 10px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+
+  /* The round number badge in front of the title. */
+  .num { background: midnightblue; color: white; width: 26px; height: 26px; border-radius: 50%;
+         display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* The canvas is the drawing area. It scales to the width of the card. */
+  canvas { width: 100%; height: auto; display: block; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<h1>2D Animation: Bouncing ball</h1>
+
+<section><h2><span class="num">1</span> Bouncing ball</h2><canvas id="ballCanvas" width="480" height="300"></canvas></section>
+
+<script>
+/* =====================================================================
+   HOW THE PAGE WORKS
+   The canvas is a drawing board, and the "context" (g) is the pen.
+   Every frame, the code erases the board, draws the picture again, and
+   moves the objects by a small amount.
+   ===================================================================== */
+
+const ballCanvas = document.getElementById('ballCanvas');
+const gBall = ballCanvas.getContext('2d');
+const W = 480, H = 300;           // the size of the canvas, in pixels
+
+
+/* =====================================================================
+   SECTION 1: THE BOUNCING BALL
+   ===================================================================== */
+
+// ----- Settings for the ball: change these values freely -----
+const BALL_COLOR   = 'black';       // any colour name, such as 'blue' or 'orange'
+const BALL_RADIUS  = 22;          // size of the ball
+const GRAVITY      = 1000;        // a larger value makes the ball fall faster
+const BOUNCE_SPEED = 700;         // a larger value makes the ball bounce higher
+const BALL_SIDE_SPEED = -200;       // sideways speed; use a negative value to go left first
+
+const FLOOR_Y = H - 50;           // the height of the ground line
+
+let ballX = 80, ballY = 40;       // the ball starts here
+let ballVY = 0;                   // vertical speed (positive means downward on a canvas)
+let ballVX = BALL_SIDE_SPEED;     // sideways speed
+
+function updateBall(dt) {
+  // Gravity increases the downward speed, and the speed changes the position.
+  ballVY += GRAVITY * dt;
+  ballY  += ballVY * dt;
+  ballX  += ballVX * dt;
+
+  // When the bottom of the ball reaches the ground, send it upward again.
+  if (ballY + BALL_RADIUS >= FLOOR_Y) {
+    ballY = FLOOR_Y - BALL_RADIUS;
+    ballVY = -BOUNCE_SPEED;
+  }
+
+  // When the ball reaches a side wall, reverse the sideways speed.
+  if (ballX + BALL_RADIUS > W || ballX - BALL_RADIUS < 0) {
+    ballVX = -ballVX;
+    ballX = Math.max(BALL_RADIUS, Math.min(W - BALL_RADIUS, ballX));
+  }
+}
+
+function drawBall() {
+  const g = gBall;
+  g.clearRect(0, 0, W, H);                         // erase the previous frame
+
+  g.fillStyle = 'skyblue';                         // the sky
+  g.fillRect(0, 0, W, FLOOR_Y);
+  g.fillStyle = 'forestgreen';                     // the ground
+  g.fillRect(0, FLOOR_Y, W, H - FLOOR_Y);
+
+  // The gap between the ball and the ground decides the shadow size and the squash.
+  const gap = FLOOR_Y - (ballY + BALL_RADIUS);
+
+  // The shadow is small and faint when the ball is high, and large and dark when it is low.
+  const shadowSize = BALL_RADIUS * (1.2 - Math.min(gap, 200) / 250);
+  g.globalAlpha = 0.35 - Math.min(gap, 200) / 700;
+  g.fillStyle = 'black';
+  g.beginPath();
+  g.ellipse(ballX, FLOOR_Y + 8, shadowSize, shadowSize * 0.3, 0, 0, Math.PI * 2);
+  g.fill();
+  g.globalAlpha = 1;
+
+  // Near the ground the ball is flattened a little, which looks like a real bounce.
+  const squash = Math.max(0, 1 - gap / 15);
+  const rx = BALL_RADIUS * (1 + 0.25 * squash);    // wider
+  const ry = BALL_RADIUS * (1 - 0.30 * squash);    // shorter
+  const centerY = ballY + BALL_RADIUS - ry;        // keeps the bottom of the ball on the ground
+
+  g.fillStyle = BALL_COLOR;
+  g.beginPath();
+  g.ellipse(ballX, centerY, rx, ry, 0, 0, Math.PI * 2);
+  g.fill();
+
+  g.fillStyle = 'white';                           // a small highlight gives a round look
+  g.globalAlpha = 0.6;
+  g.beginPath();
+  g.arc(ballX - rx * 0.35, centerY - ry * 0.35, BALL_RADIUS * 0.22, 0, Math.PI * 2);
+  g.fill();
+  g.globalAlpha = 1;
+}
+
+
+/* =====================================================================
+   THE ANIMATION LOOP
+   The browser calls animate() before every screen refresh, about 60 times
+   per second. dt is the time since the last frame, in seconds. Using dt
+   keeps the speed the same on fast and slow computers.
+   ===================================================================== */
+let lastTime = performance.now();
+
+function animate(now) {
+  const dt = Math.min((now - lastTime) / 1000, 0.05);  // the limit avoids jumps after a pause
+  lastTime = now;
+
+  updateBall(dt);  drawBall();
+
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

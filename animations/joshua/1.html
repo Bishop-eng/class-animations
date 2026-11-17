@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bouncing Ball</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      background: #1e272e;
+      overflow: hidden;
+    }
+    .floor {
+      width: 100%;
+      height: 50px;
+      background: #485460;
+      position: relative;
+    }
+    .ball {
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #ff5e57, #ff3f34);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 50px;
+      left: calc(50% - 40px);
+      animation: bounce 1.2s infinite;
+    }
+    .shadow {
+      width: 80px;
+      height: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 50%;
+      position: absolute;
+      bottom: 42px;
+      left: calc(50% - 40px);
+      animation: shadowScale 1.2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0) scale(1.15, 0.85);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      10% {
+        transform: translateY(-20px) scale(0.95, 1.05);
+      }
+      50% {
+        transform: translateY(-300px) scale(1, 1);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      90% {
+        transform: translateY(-20px) scale(0.95, 1.05);
+      }
+    }
+
+    @keyframes shadowScale {
+      0%, 100% { transform: scale(1.2); opacity: 0.7; }
+      50% { transform: scale(0.4); opacity: 0.2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shadow"></div>
+  <div class="ball"></div>
+  <div class="floor"></div>
+</body>
+</html>

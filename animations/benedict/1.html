@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bouncing Ball</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+
+<div style="text-align:center; font-family:Arial, sans-serif;">
+  <canvas id="ballCanvas" width="500" height="400"
+          style="background:#e8f4ff; border:2px solid #444; border-radius:12px; max-width:100%;"></canvas>
+  <p>🏀 A ball bouncing around the room</p>
+</div>
+
+<script>
+(function () {
+  var canvas = document.getElementById("ballCanvas");
+  var ctx = canvas.getContext("2d");
+  var W = canvas.width, H = canvas.height;
+
+  var FLOOR = 350;        // y position of the ground
+  var R = 30;             // ball radius
+  var GRAVITY = 0.5;
+  var BOUNCE = 0.88;      // energy kept after each bounce
+
+  var x = 120, y = 80;    // ball position (center)
+  var vx = 3, vy = 0;     // ball velocity
+  var squash = 0;         // squash effect when hitting the floor
+
+  function update() {
+    vy += GRAVITY;
+    x += vx;
+    y += vy;
+
+    // walls
+    if (x - R < 0)  { x = R;     vx = Math.abs(vx); }
+    if (x + R > W)  { x = W - R; vx = -Math.abs(vx); }
+
+    // floor
+    if (y + R > FLOOR) {
+      y = FLOOR - R;
+      vy = -vy * BOUNCE;
+      if (Math.abs(vy) < 6) { vy = -15; }   // keeps the ball bouncing forever
+      squash = 1;
+    }
+
+    squash *= 0.85;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // sky
+    var sky = ctx.createLinearGradient(0, 0, 0, FLOOR);
+    sky.addColorStop(0, "#cfe9ff");
+    sky.addColorStop(1, "#f4fbff");
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, FLOOR);
+
+    // floor
+    ctx.fillStyle = "#6aa86a";
+    ctx.fillRect(0, FLOOR, W, H - FLOOR);
+    ctx.fillStyle = "#4f8a4f";
+    ctx.fillRect(0, FLOOR, W, 4);
+
+    // shadow (smaller and lighter when the ball is high)
+    var height = FLOOR - (y + R);
+    var s = Math.max(0.35, 1 - height / 400);
+    ctx.fillStyle = "rgba(0,0,0," + (0.28 * s) + ")";
+    ctx.beginPath();
+    ctx.ellipse(x, FLOOR + 10, R * 1.2 * s, 7 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // ball (squashes when it hits the floor)
+    var rx = R * (1 + 0.25 * squash);
+    var ry = R * (1 - 0.25 * squash);
+    var cy = y + (R - ry);
+
+    ctx.save();
+    ctx.translate(x, cy);
+    var grad = ctx.createRadialGradient(-10, -12, 4, 0, 0, R);
+    grad.addColorStop(0, "#ff8a80");
+    grad.addColorStop(1, "#c62828");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function animate() {
+    update();
+    draw();
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+</script>
+
+</body>
+</html>

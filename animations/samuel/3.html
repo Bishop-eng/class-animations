@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>3 · A one-legged hero in a dramatic standoff</title>
+<style>
+
+:root{--bg:#f6f5f1;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e2e0d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}}
+:root[data-theme="dark"]{--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+main{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin:8px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 8px;color:var(--muted);font-weight:600}
+svg{width:100%;height:auto;display:block;border-radius:8px}
+svg text{font-family:system-ui,sans-serif}
+
+
+
+.b{opacity:0;animation:say 16s infinite}
+.b1{animation-delay:0s}.b2{animation-delay:4s}.b3{animation-delay:8s}.b4{animation-delay:12s}
+@keyframes say{0%{opacity:0}2%,22%{opacity:1}25%,100%{opacity:0}}
+.arm{animation:arm 16s infinite;transform-origin:90px 92px}
+@keyframes arm{0%,22%{transform:rotate(0)}28%,45%{transform:rotate(-70deg)}50%,72%{transform:rotate(0)}78%,98%{transform:rotate(-100deg)}100%{transform:rotate(0)}}
+.flash{opacity:0;animation:fl 16s infinite}
+@keyframes fl{0%,76%{opacity:0}77%{opacity:.85}79%{opacity:.1}80%{opacity:.7}83%,100%{opacity:0}}
+.rain{animation:rain .5s linear infinite}
+@keyframes rain{to{transform:translate(-8px,40px)}}
+.sway{animation:sway 2s ease-in-out infinite alternate;transform-origin:230px 170px}
+@keyframes sway{to{transform:rotate(2deg)}}
+
+
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<main>
+<div class="card"><h2>3 · A one-legged hero in a dramatic standoff</h2>
+<svg viewBox="0 0 320 200"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f3b"/><stop offset="1" stop-color="#3a2e4f"/></linearGradient></defs>
+<rect width="320" height="200" fill="url(#sk)"/>
+<g stroke="#9fb4d9" stroke-width="1" opacity=".5"><g class="rain">
+<path d="M20 -40l-4 12M60 -20l-4 12M100 -50l-4 12M140 -30l-4 12M180 -45l-4 12M220 -25l-4 12M260 -55l-4 12M300 -35l-4 12M40 20l-4 12M120 10l-4 12M200 0l-4 12M280 15l-4 12M80 60l-4 12M160 70l-4 12M240 55l-4 12M20 100l-4 12M300 90l-4 12M180 120l-4 12M60 130l-4 12M260 130l-4 12"/></g></g>
+<rect y="170" width="320" height="30" fill="#14122a"/>
+<!-- hero: one leg + crutch -->
+<g stroke-linecap="round" stroke-width="4" fill="none" stroke="#ffb74d">
+<line x1="90" y1="82" x2="90" y2="125"/><line x1="90" y1="125" x2="95" y2="170"/>
+<line x1="90" y1="125" x2="85" y2="140" stroke-width="5"/>
+<line x1="90" y1="92" x2="76" y2="106"/>
+<line x1="72" y1="100" x2="66" y2="170" stroke="#d7ccc8" stroke-width="3"/><line x1="66" y1="100" x2="78" y2="100" stroke="#d7ccc8" stroke-width="3"/>
+<g class="arm"><line x1="90" y1="92" x2="112" y2="104"/></g></g>
+<circle cx="90" cy="70" r="12" fill="#ffb74d"/><circle cx="86" cy="68" r="1.6" fill="#111"/><circle cx="94" cy="68" r="1.6" fill="#111"/><path d="M85 75q5-3 10 0" stroke="#111" fill="none"/>
+<text x="90" y="188" text-anchor="middle" font-size="9" fill="#ffb74d">Sam</text>
+<!-- rival -->
+<g class="sway" stroke-linecap="round" stroke-width="4" fill="none" stroke="#64b5f6">
+<line x1="230" y1="82" x2="230" y2="125"/><line x1="230" y1="125" x2="222" y2="170"/><line x1="230" y1="125" x2="240" y2="170"/>
+<line x1="230" y1="92" x2="214" y2="108"/><line x1="230" y1="92" x2="246" y2="106"/>
+<circle cx="230" cy="70" r="12" fill="#64b5f6" stroke="none"/></g>
+<text x="230" y="188" text-anchor="middle" font-size="9" fill="#64b5f6">Victor</text>
+<!-- bubbles -->
+<g class="b b1"><rect x="165" y="8" width="145" height="38" rx="8" fill="#e3f2fd"/><text font-size="10" fill="#0d2a4a"><tspan x="173" y="25">You can’t keep going.</tspan><tspan x="173" y="38">Not like this.</tspan></text></g>
+<g class="b b2"><rect x="10" y="8" width="145" height="38" rx="8" fill="#fff3e0"/><text font-size="10" fill="#4a2a00"><tspan x="18" y="25">I lost a leg,</tspan><tspan x="18" y="38">not my will.</tspan></text></g>
+<g class="b b3"><rect x="165" y="8" width="145" height="38" rx="8" fill="#e3f2fd"/><text font-size="10" fill="#0d2a4a"><tspan x="173" y="25">Then prove it.</tspan><tspan x="173" y="38">I dare you.</tspan></text></g>
+<g class="b b4"><rect x="10" y="8" width="145" height="38" rx="8" fill="#ffe0b2"/><text font-size="13" font-weight="700" fill="#4a2a00"><tspan x="18" y="32">Watch me.</tspan></text></g>
+<rect class="flash" width="320" height="200" fill="#fff"/></svg></div>
+</main>
+</body>
+</html>

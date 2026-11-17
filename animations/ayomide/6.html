@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dramatic Conversation</title>
+<style>
+  body { margin: 0; background: #000; }
+  canvas { display: block; margin: 20px auto; border: 2px solid #333; }
+</style>
+</head>
+<body>
+<canvas id="c" width="800" height="450"></canvas>
+<script>
+const canvas = document.getElementById("c"); // the drawing area
+const ctx = canvas.getContext("2d"); // the 2D drawing tool
+
+// who: 0 = legless robot (left), 1 = person (right). flash: lightning on this line.
+const lines = [
+  { who: 1, text: "Look at you. No legs. How far do you think you can go?" },
+  { who: 0, text: "Further than you think." },
+  { who: 1, text: "You can't even stand up!", flash: true },
+  { who: 0, text: "I never needed to stand. I needed to rise.", flash: true },
+  { who: 1, text: "..." },
+  { who: 0, text: "Strength was never in the legs. It was in refusing to stop." },
+  { who: 1, text: "Then... show me." },
+  { who: 0, text: "Watch me.", flash: true }
+];
+
+let idx = 0;          // current line number
+let chars = 0;        // letters revealed so far (typewriter effect)
+let hold = 0;         // frames to wait after a line finishes
+let flash = 0;        // lightning brightness (0 to 1)
+let t = 0;            // time counter
+
+function wrapText(text, maxWidth) {       // splits text into rows that fit a bubble
+  const words = text.split(" "), out = [];
+  let line = "";
+  words.forEach(w => {
+    const test = line + w + " ";
+    if (ctx.measureText(test).width > maxWidth && line) { out.push(line); line = w + " "; }
+    else line = test;
+  });
+  out.push(line);
+  return out;
+}
+
+function drawBubble(text, x, y) {         // speech bubble above a character
+  ctx.font = "18px Arial";
+  const rows = wrapText(text, 230);
+  const h = rows.length * 24 + 20, w = 260;
+  const bx = Math.min(Math.max(x - w / 2, 10), canvas.width - w - 10), by = y - h;
+  ctx.fillStyle = "#fff";
+  ctx.strokeStyle = "#000"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.roundRect(bx, by, w, h, 12); ctx.fill(); ctx.stroke();
+  ctx.beginPath();                         // little tail pointing at the speaker
+  ctx.moveTo(x - 10, by + h); ctx.lineTo(x, by + h + 18); ctx.lineTo(x + 10, by + h);
+  ctx.fillStyle = "#fff"; ctx.fill();
+  ctx.fillStyle = "#000";
+  rows.forEach((r, i) => ctx.fillText(r, bx + 14, by + 28 + i * 24));
+}
+
+function drawRobot(x, y, talking) {       // legless robot floating on a glow
+  const bob = Math.sin(t * 2) * 5;        // gentle hovering
+  y += bob;
+  // glow where legs would be: it hovers on its own power
+  const g = ctx.createRadialGradient(x, y + 120, 5, x, y + 120, 60);
+  g.addColorStop(0, "rgba(0,200,255,0.9)"); g.addColorStop(1, "rgba(0,200,255,0)");
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y + 120, 60, 0, Math.PI * 2); ctx.fill();
+  // tapered torso ending at the waist
+  ctx.fillStyle = "#8fa3b8";
+  ctx.beginPath();
+  ctx.moveTo(x - 40, y); ctx.lineTo(x + 40, y); ctx.lineTo(x + 20, y + 110); ctx.lineTo(x - 20, y + 110);
+  ctx.closePath(); ctx.fill();
+  // arms: the speaker raises an arm to gesture
+  ctx.strokeStyle = "#8fa3b8"; ctx.lineWidth = 12; ctx.lineCap = "round";
+  const lift = talking ? Math.sin(t * 8) * 15 - 30 : 20;
+  ctx.beginPath(); ctx.moveTo(x - 40, y + 10); ctx.lineTo(x - 75, y + 50 + lift); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x + 40, y + 10); ctx.lineTo(x + 75, y + 50 + lift); ctx.stroke();
+  // head with glowing eyes and mouth
+  ctx.fillStyle = "#a9bccf"; ctx.fillRect(x - 30, y - 60, 60, 52);
+  ctx.fillStyle = "#0ff";
+  ctx.fillRect(x - 18, y - 42, 10, 10); ctx.fillRect(x + 8, y - 42, 10, 10);
+  ctx.fillRect(x - 12, y - 22, 24, talking ? 6 + Math.abs(Math.sin(t * 15)) * 6 : 3);
+  ctx.fillStyle = "#555"; ctx.fillRect(x - 2, y - 76, 4, 16);   // antenna
+}
+
+function drawPerson(x, y, talking) {      // simple stick figure with legs
+  ctx.strokeStyle = "#e0b090"; ctx.lineWidth = 8; ctx.lineCap = "round";
+  ctx.fillStyle = "#e0b090";
+  ctx.beginPath(); ctx.arc(x, y - 40, 28, 0, Math.PI * 2); ctx.fill();   // head
+  ctx.strokeStyle = "#b04040";
+  ctx.beginPath(); ctx.moveTo(x, y - 12); ctx.lineTo(x, y + 90); ctx.stroke(); // body
+  const lift = talking ? Math.sin(t * 8) * 20 - 25 : 30;
+  ctx.beginPath(); ctx.moveTo(x, y + 5); ctx.lineTo(x - 50, y + 45 + lift); ctx.stroke(); // arms
+  ctx.beginPath(); ctx.moveTo(x, y + 5); ctx.lineTo(x + 50, y + 45 + lift); ctx.stroke();
+  ctx.strokeStyle = "#334";
+  ctx.beginPath(); ctx.moveTo(x, y + 90); ctx.lineTo(x - 30, y + 170); ctx.stroke(); // legs
+  ctx.beginPath(); ctx.moveTo(x, y + 90); ctx.lineTo(x + 30, y + 170); ctx.stroke();
+  ctx.fillStyle = "#000";                  // eyes and mouth
+  ctx.fillRect(x - 12, y - 48, 5, 5); ctx.fillRect(x + 8, y - 48, 5, 5);
+  ctx.fillRect(x - 8, y - 30, 16, talking ? 5 + Math.abs(Math.sin(t * 15)) * 5 : 2);
+}
+
+function animate() {
+  t += 0.03;
+  const line = lines[idx];
+
+  // typewriter and timing logic
+  if (chars < line.text.length) chars += 0.6;
+  else if (++hold > 110) {                 // wait, then go to the next line
+    hold = 0; chars = 0; idx = (idx + 1) % lines.length;
+    if (lines[idx].flash) flash = 1;       // trigger lightning
+  }
+  flash *= 0.93;                           // lightning fades
+
+  // screen shake while lightning is bright
+  const sx = flash > 0.4 ? (Math.random() - 0.5) * 8 : 0;
+  const sy = flash > 0.4 ? (Math.random() - 0.5) * 8 : 0;
+
+  ctx.save();
+  ctx.translate(sx, sy);
+  ctx.fillStyle = "#0a0a18"; ctx.fillRect(-10, -10, 820, 470);   // dark stormy backdrop
+
+  // spotlight on whoever is speaking
+  const sxPos = line.who === 0 ? 220 : 580;
+  const sp = ctx.createRadialGradient(sxPos, 250, 10, sxPos, 250, 260);
+  sp.addColorStop(0, "rgba(255,240,200,0.35)"); sp.addColorStop(1, "rgba(255,240,200,0)");
+  ctx.fillStyle = sp; ctx.fillRect(0, 0, 800, 450);
+
+  ctx.fillStyle = "#1a1a2a"; ctx.fillRect(0, 400, 800, 50);       // ground
+
+  const done = chars >= line.text.length;
+  drawRobot(220, 230, line.who === 0 && !done);
+  drawPerson(580, 220, line.who === 1 && !done);
+
+  // bubble above the speaker
+  drawBubble(line.text.slice(0, Math.floor(chars)), sxPos, 110);
+
+  // lightning flash overlay
+  ctx.fillStyle = "rgba(255,255,255," + flash * 0.6 + ")";
+  ctx.fillRect(-10, -10, 820, 470);
+
+  // vignette (dark edges) for a cinematic feel
+  const v = ctx.createRadialGradient(400, 225, 200, 400, 225, 480);
+  v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,0.7)");
+  ctx.fillStyle = v; ctx.fillRect(-10, -10, 820, 470);
+  ctx.restore();
+
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

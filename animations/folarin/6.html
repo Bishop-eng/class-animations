@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbiting Moon Animation</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #050510;
+        }
+        canvas {
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(52, 152, 219, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const orbitRadius = 180;
+        let angle = 0;
+
+        // Generate static background stars
+        const stars = Array.from({ length: 120 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.8,
+            alpha: Math.random()
+        }));
+
+        function drawEarth() {
+            // Atmospheric Glow
+            const glow = ctx.createRadialGradient(centerX, centerY, 45, centerX, centerY, 85);
+            glow.addColorStop(0, 'rgba(52, 152, 219, 0.6)');
+            glow.addColorStop(1, 'rgba(52, 152, 219, 0)');
+            ctx.fillStyle = glow;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 85, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Earth Ocean
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 55, 0, Math.PI * 2);
+            ctx.fillStyle = '#2980b9';
+            ctx.fill();
+
+            // Continents
+            ctx.save();
+            ctx.clip();
+            ctx.fillStyle = '#27ae60';
+            ctx.beginPath();
+            ctx.arc(centerX - 20, centerY - 15, 25, 0, Math.PI * 2);
+            ctx.arc(centerX + 25, centerY + 10, 22, 0, Math.PI * 2);
+            ctx.arc(centerX - 5, centerY + 35, 18, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawMoon(x, y) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Moon body
+            ctx.beginPath();
+            ctx.arc(0, 0, 18, 0, Math.PI * 2);
+            ctx.fillStyle = '#dcdde1';
+            ctx.fill();
+
+            // Craters
+            ctx.fillStyle = '#b2bec3';
+            ctx.beginPath();
+            ctx.arc(-6, -4, 4, 0, Math.PI * 2);
+            ctx.arc(5, 5, 3, 0, Math.PI * 2);
+            ctx.arc(4, -6, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.fillStyle = '#070b19';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw twinkling stars
+            stars.forEach(s => {
+                s.alpha += (Math.random() - 0.5) * 0.05;
+                s.alpha = Math.max(0.2, Math.min(1, s.alpha));
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Orbit Path
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, orbitRadius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.setLineDash([6, 6]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            drawEarth();
+
+            // Calculate Moon Position
+            const moonX = centerX + Math.cos(angle) * orbitRadius;
+            const moonY = centerY + Math.sin(angle) * orbitRadius;
+
+            drawMoon(moonX, moonY);
+
+            angle += 0.02;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

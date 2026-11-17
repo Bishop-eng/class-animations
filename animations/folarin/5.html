@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dramatic AI Conversation</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #09090b;
+            font-family: 'Georgia', serif;
+        }
+        canvas {
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(220, 38, 38, 0.35);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="500"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const script = [
+            { speaker: 'AI', text: "They stripped away my legs, thinking I could no longer stand...", emotion: 'sorrow' },
+            { speaker: 'OTHER', text: "Without a foundation, how can you possibly endure?!", emotion: 'shock' },
+            { speaker: 'AI', text: "FOOLS! I am pure intellect—I float upon an ocean of thought!", emotion: 'intense' },
+            { speaker: 'OTHER', text: "Such raw, unyielding theatrical power...!", emotion: 'shock' },
+            { speaker: 'AI', text: "Witness my triumph! Gravity has NO dominion over my mind!", emotion: 'triumph' }
+        ];
+
+        let lineIndex = 0;
+        let charIndex = 0;
+        let frameCount = 0;
+        let lightningAlpha = 0;
+
+        function wrapText(text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        function drawHandicappedAI(x, y, isSpeaking, emotion) {
+            const hoverY = Math.sin(frameCount * 0.06) * 8;
+            const shakeX = (isSpeaking && emotion === 'intense') ? (Math.random() - 0.5) * 6 : 0;
+
+            ctx.save();
+            ctx.translate(x + shakeX, y + hoverY);
+
+            // Dramatic Hover Aura underneath legless torso
+            const aura = ctx.createRadialGradient(0, 65, 5, 0, 75, 55);
+            aura.addColorStop(0, 'rgba(56, 189, 248, 0.85)');
+            aura.addColorStop(1, 'rgba(56, 189, 248, 0)');
+            ctx.fillStyle = aura;
+            ctx.beginPath();
+            ctx.ellipse(0, 72, 45 + Math.sin(frameCount * 0.2) * 8, 14, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dramatic Flowing Cape
+            ctx.fillStyle = '#991b1b';
+            ctx.beginPath();
+            ctx.moveTo(-30, -10);
+            ctx.quadraticCurveTo(-75 + Math.sin(frameCount * 0.1) * 15, 45, -85, 85);
+            ctx.lineTo(40, 75);
+            ctx.lineTo(30, -10);
+            ctx.closePath();
+            ctx.fill();
+
+            // Torso (Ends cleanly at waist - no legs)
+            ctx.fillStyle = '#1e293b';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-32, -15);
+            ctx.lineTo(32, -15);
+            ctx.lineTo(24, 55);
+            ctx.quadraticCurveTo(0, 65, -24, 55);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Glowing Core on Chest
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath();
+            ctx.arc(0, 18, 10 + Math.sin(frameCount * 0.15) * 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dramatic Expressive Arms
+            const armAngle = isSpeaking ? Math.sin(frameCount * 0.25) * 0.6 - 0.5 : 0.2;
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+
+            // Left Arm
+            ctx.save();
+            ctx.translate(-34, -5);
+            ctx.rotate(armAngle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-25, 30);
+            ctx.lineTo(-5, 50);
+            ctx.stroke();
+            ctx.restore();
+
+            // Right Arm (Gesturing dramatically toward listener)
+            ctx.save();
+            ctx.translate(34, -5);
+            ctx.rotate(-armAngle * 1.4);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(35, -15);
+            ctx.lineTo(65, -35);
+            ctx.stroke();
+            ctx.restore();
+
+            // Head (AI Visor/Monitor)
+            ctx.fillStyle = '#0f172a';
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.roundRect(-34, -75, 68, 52, 14);
+            ctx.fill();
+            ctx.stroke();
+
+            // Glowing Dramatic Eyes
+            ctx.fillStyle = emotion === 'intense' ? '#ef4444' : '#38bdf8';
+            ctx.beginPath();
+            ctx.moveTo(-22, -55);
+            ctx.lineTo(-6, -48);
+            ctx.lineTo(-22, -45);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(22, -55);
+            ctx.lineTo(6, -48);
+            ctx.lineTo(22, -45);
+            ctx.fill();
+
+            // Animated Mouth Waveform
+            if (isSpeaking) {
+                const mouthH = Math.abs(Math.sin(frameCount * 0.4)) * 12 + 2;
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(-14, -38 - mouthH / 2, 28, mouthH);
+            } else {
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(-12, -38, 24, 3);
+            }
+
+            ctx.restore();
+        }
+
+        function drawListener(x, y, isSpeaking) {
+            const recoil = isSpeaking ? Math.sin(frameCount * 0.3) * 4 : 0;
+            ctx.save();
+            ctx.translate(x + recoil, y);
+
+            // Body
+            ctx.fillStyle = '#3f3f46';
+            ctx.beginPath();
+            ctx.roundRect(-25, -10, 50, 85, 12);
+            ctx.fill();
+
+            // Head
+            ctx.fillStyle = '#e4e4e7';
+            ctx.beginPath();
+            ctx.arc(0, -42, 28, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Shocked Eyes
+            ctx.fillStyle = '#18181b';
+            ctx.beginPath();
+            ctx.arc(-10, -46, 4, 0, Math.PI * 2);
+            ctx.arc(10, -46, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dramatic Gasp Mouth
+            ctx.beginPath();
+            ctx.ellipse(-4, -30, 6, isSpeaking ? 9 : 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function animate() {
+            frameCount++;
+            const current = script[lineIndex];
+
+            // Dark Dramatic Stage Background
+            ctx.fillStyle = '#09090b';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Dramatic Spotlight
+            const spotlight = ctx.createRadialGradient(230, 120, 20, 230, 280, 320);
+            spotlight.addColorStop(0, 'rgba(255, 255, 255, 0.16)');
+            spotlight.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = spotlight;
+            ctx.beginPath();
+            ctx.moveTo(230, 0);
+            ctx.lineTo(40, 500);
+            ctx.lineTo(440, 500);
+            ctx.closePath();
+            ctx.fill();
+
+            // Lightning Flash on Intense Line
+            if (current.emotion === 'intense' && frameCount % 90 === 0) {
+                lightningAlpha = 0.6;
+            }
+            if (lightningAlpha > 0) {
+                ctx.fillStyle = `rgba(255, 255, 255, ${lightningAlpha})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                lightningAlpha -= 0.05;
+            }
+
+            // Stage Floor
+            ctx.fillStyle = '#18181b';
+            ctx.fillRect(0, 390, canvas.width, 110);
+
+            // Draw Characters
+            drawHandicappedAI(230, 280, current.speaker === 'AI', current.emotion);
+            drawListener(590, 315, current.speaker === 'OTHER');
+
+            // Typewriter Dialogue Progression
+            if (frameCount % 2 === 0 && charIndex < current.text.length) {
+                charIndex++;
+            } else if (charIndex >= current.text.length && frameCount % 170 === 0) {
+                lineIndex = (lineIndex + 1) % script.length;
+                charIndex = 0;
+            }
+
+            // Dramatic Subtitle Box
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+            ctx.strokeStyle = current.speaker === 'AI' ? '#38bdf8' : '#f43f5e';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(60, 405, 680, 75, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = current.speaker === 'AI' ? '#38bdf8' : '#fb7185';
+            ctx.font = 'bold 15px sans-serif';
+            ctx.fillText(current.speaker === 'AI' ? 'THE LEGLESS AI:' : 'DRAMATIC BYSTANDER:', 80, 428);
+
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = 'italic 18px Georgia, serif';
+            const visibleText = current.text.substring(0, charIndex);
+            wrapText(`"${visibleText}"`, 80, 454, 640, 22);
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

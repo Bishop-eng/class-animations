@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bouncing Ball</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(#1e2235 50%,#23283f 50%);font-family:system-ui,sans-serif}
+  svg{position:absolute;inset:0;width:100%;height:100%}
+  .label{position:fixed;top:18px;width:100%;text-align:center;color:#8f94b3;font-size:14px;letter-spacing:.08em;font-weight:600}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <radialGradient id="g" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffc2b3"/><stop offset=".5" stop-color="#ff5a5f"/><stop offset="1" stop-color="#b3122a"/></radialGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e2235"/><stop offset="1" stop-color="#2f3558"/></linearGradient>
+  </defs>
+  <rect width="1000" height="480" fill="url(#bg)"/>
+  <rect y="480" width="1000" height="120" fill="#23283f"/>
+  <rect y="478" width="1000" height="4" fill="#4a5288"/>
+  <ellipse cy="484" rx="50" ry="9" fill="#000" opacity=".5">
+    <animate attributeName="cx" values="80;920;80" dur="17.6s" repeatCount="indefinite"/>
+    <animate attributeName="rx" values="50;20;50" keyTimes="0;.5;1" calcMode="spline" keySplines="0 0 .58 1;.42 0 1 1" dur="1.1s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".5;.15;.5" keyTimes="0;.5;1" calcMode="spline" keySplines="0 0 .58 1;.42 0 1 1" dur="1.1s" repeatCount="indefinite"/>
+  </ellipse>
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="80 480;920 480;80 480" dur="17.6s" repeatCount="indefinite"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 -45;0 -405;0 -45" keyTimes="0;.5;1" calcMode="spline" keySplines="0 0 .58 1;.42 0 1 1" dur="1.1s" repeatCount="indefinite"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 13;0 0;0 0;0 13" keyTimes="0;.07;.93;1" dur="1.1s" repeatCount="indefinite"/>
+        <g>
+          <animateTransform attributeName="transform" type="scale" values="1.3 .72;.94 1.08;1 1;.94 1.08;1.3 .72" keyTimes="0;.07;.5;.93;1" dur="1.1s" repeatCount="indefinite"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="0;1300;0" dur="17.6s" repeatCount="indefinite"/>
+            <circle r="45" fill="url(#g)"/>
+            <path d="M-45 0 A45 45 0 0 0 45 0" stroke="#fff" stroke-opacity=".35" stroke-width="4" fill="none"/>
+          </g>
+          <path d="M-30 -12 A32 32 0 0 1 -8 -32" stroke="#fff" stroke-opacity=".6" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+<div class="label">BOUNCING BALL</div>
+</body>
+</html>

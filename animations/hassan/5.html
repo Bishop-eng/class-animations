@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving Moon</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 2px solid #ffffff;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="moonCanvas" width="600" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('moonCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Moon path variables (Arc motion)
+        let angle = 0;
+        let radiusPath = 220;
+        let centerX = 600 / 2;
+        let centerY = 400 + 50;
+
+        // Static stars array
+        const stars = [
+            {x: 100, y: 50}, {x: 200, y: 80}, {x: 450, y: 60}, 
+            {x: 520, y: 150}, {x: 80, y: 200}, {x: 350, y: 100},
+            {x: 150, y: 130}, {x: 500, y: 90}, {x: 280, y: 60}
+        ];
+
+        function animate() {
+            // Update angle along an arc
+            angle += 0.012;
+            if (angle > Math.PI) {
+                angle = 0; // Reset when it sets
+            }
+
+            let moonX = centerX - radiusPath * Math.cos(angle);
+            let moonY = centerY - radiusPath * Math.sin(angle);
+
+            // 1. Draw background (Night Sky)
+            ctx.fillStyle = '#0a0a23';
+            ctx.fillRect(0, 0, 600, 400);
+
+            // 2. Draw stars
+            ctx.fillStyle = '#FFFFFF';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, 2, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 3. Draw moon
+            ctx.fillStyle = '#F0F0C8';
+            ctx.beginPath();
+            ctx.arc(moonX, moonY, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Loop the animation
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation loop
+        animate();
+    </script>
+
+</body>
+</html>

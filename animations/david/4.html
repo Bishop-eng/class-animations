@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouncing Moon Animation</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#080f28;font-family:system-ui,sans-serif;color:#f5f2ff}
+main{width:min(960px,94vw);text-align:center;padding:24px 12px}
+h1{margin:0 0 8px;font-size:clamp(1.7rem,4vw,2.7rem)}
+p{margin:0 0 22px;color:#c7c5df}
+.scene{height:min(520px,65vh);min-height:340px;position:relative;overflow:hidden;border-radius:22px;border:1px solid #ffffff22;background:radial-gradient(ellipse at 50% 120%,#344779,#111b3c 60%,#080f28);box-shadow:0 18px 55px #0008}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;box-shadow:0 0 8px #fff}
+.star:nth-child(1){left:12%;top:18%}.star:nth-child(2){left:24%;top:42%}.star:nth-child(3){left:39%;top:14%}.star:nth-child(4){left:68%;top:24%}.star:nth-child(5){left:82%;top:13%}.star:nth-child(6){left:91%;top:47%}.star:nth-child(7){left:57%;top:55%}.star:nth-child(8){left:8%;top:62%}
+.moon-track{position:absolute;inset:0}
+.moon{position:absolute;left:10%;top:22%;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fffde4,#e7e6c8 58%,#aaa98f);box-shadow:0 0 35px #fff7c477,inset -12px -10px 18px #85866e55;animation:bounce 4s ease-in-out infinite alternate}
+.crater{position:absolute;border-radius:50%;background:#c4c3a8aa;box-shadow:inset 3px 3px 5px #898a7855}
+.c1{width:18px;height:13px;left:18px;top:24px}.c2{width:12px;height:10px;right:18px;top:51px}.c3{width:9px;height:8px;left:48px;top:14px}
+@keyframes bounce{0%{left:8%;top:18%;transform:scale(.9)}25%{top:58%;transform:scale(1.03)}50%{left:43%;top:16%;transform:scale(.92)}75%{top:58%;transform:scale(1.03)}100%{left:82%;top:20%;transform:scale(.9)}}
+.ground-glow{position:absolute;bottom:0;left:0;right:0;height:13%;background:linear-gradient(transparent,#25345b88)}
+.controls{display:flex;justify-content:center;gap:10px;margin-top:17px;flex-wrap:wrap}
+button{border:0;border-radius:999px;padding:11px 19px;background:#e8e6c7;color:#1b2340;font-weight:700;cursor:pointer}
+.paused *{animation-play-state:paused!important}
+</style>
+</head>
+<body><main>
+<h1>The Bouncing Moon</h1><p>The moon travels from one side of the night sky to the other, bouncing between high and low points.</p>
+<section class="scene" id="scene">
+<div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+<div class="moon-track"><div class="moon"><span class="crater c1"></span><span class="crater c2"></span><span class="crater c3"></span></div></div>
+<div class="ground-glow"></div>
+</section>
+<div class="controls">
+<button onclick="const s=document.getElementById('scene');s.classList.toggle('paused');this.textContent=s.classList.contains('paused')?'Resume animation':'Pause animation'">Pause animation</button>
+<button onclick="document.querySelector('.moon').style.animationDuration='2s'">Faster</button>
+<button onclick="document.querySelector('.moon').style.animationDuration='7s'">Slower</button>
+</div>
+</main></body></html>

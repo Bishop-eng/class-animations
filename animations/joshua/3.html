@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dramatic Conversation</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #0f0f13;
+      color: white;
+      font-family: 'Georgia', serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .stage {
+      width: 800px;
+      height: 450px;
+      background: radial-gradient(circle at center, #2c2c3a 0%, #09090d 80%);
+      border: 4px solid #333;
+      position: relative;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding-bottom: 40px;
+      box-shadow: 0 0 60px rgba(0,0,0,0.9);
+    }
+    .shake {
+      animation: dramaticShake 0.4s ease-in-out;
+    }
+    /* Character Container */
+    .character {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .head {
+      width: 70px;
+      height: 80px;
+      background: #f1c27d;
+      border-radius: 35px;
+      position: relative;
+      z-index: 3;
+    }
+    .eyebrow {
+      width: 22px;
+      height: 5px;
+      background: #222;
+      position: absolute;
+      top: 22px;
+      transition: transform 0.2s;
+    }
+    .eyebrow.left { left: 10px; transform: rotate(15deg); }
+    .eyebrow.right { right: 10px; transform: rotate(-15deg); }
+    
+    .eye {
+      width: 10px;
+      height: 10px;
+      background: #111;
+      border-radius: 50%;
+      position: absolute;
+      top: 32px;
+    }
+    .eye.left { left: 16px; }
+    .eye.right { right: 16px; }
+
+    .mouth {
+      width: 24px;
+      height: 6px;
+      background: #800000;
+      border-radius: 10px;
+      position: absolute;
+      bottom: 16px;
+      left: 23px;
+    }
+    .talking .mouth {
+      animation: talk 0.25s infinite alternate;
+    }
+    .talking .head {
+      animation: headBob 0.3s infinite alternate;
+    }
+
+    /* Protagonist (No legs / Wheelchair) */
+    .torso-protag {
+      width: 80px;
+      height: 85px;
+      background: #2980b9;
+      border-radius: 20px 20px 10px 10px;
+      margin-top: -5px;
+      z-index: 2;
+      position: relative;
+    }
+    .arm {
+      width: 18px;
+      height: 65px;
+      background: #2980b9;
+      position: absolute;
+      right: -10px;
+      top: 10px;
+      border-radius: 10px;
+      transform-origin: top center;
+    }
+    .talking .arm {
+      animation: gesture 0.5s infinite alternate;
+    }
+    .wheelchair {
+      width: 95px;
+      height: 60px;
+      border-left: 8px solid #7f8c8d;
+      border-bottom: 8px solid #7f8c8d;
+      position: relative;
+      margin-top: -40px;
+      z-index: 1;
+    }
+    .wheel-big {
+      width: 75px;
+      height: 75px;
+      border: 6px solid #bdc3c7;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -25px;
+      left: -15px;
+      background: repeating-conic-gradient(from 0deg, transparent 0deg 25deg, #7f8c8d 25deg 30deg);
+    }
+    .wheel-small {
+      width: 25px;
+      height: 25px;
+      border: 4px solid #bdc3c7;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -25px;
+      right: -10px;
+    }
+
+    /* Rival Character */
+    .torso-rival {
+      width: 85px;
+      height: 110px;
+      background: #8e44ad;
+      border-radius: 20px 20px 5px 5px;
+      margin-top: -5px;
+    }
+    .legs-rival {
+      width: 65px;
+      height: 90px;
+      background: #2c3e50;
+      display: flex;
+      justify-content: space-between;
+    }
+    .leg-split {
+      width: 10px;
+      height: 100%;
+      background: #1a1a24;
+      margin: 0 auto;
+    }
+
+    /* Dialogue Box */
+    .dialogue-box {
+      position: absolute;
+      top: 30px;
+      width: 80%;
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #f1c40f;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+    }
+    .speaker {
+      color: #f1c40f;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    @keyframes talk {
+      0% { height: 5px; border-radius: 5px; }
+      100% { height: 22px; border-radius: 50%; }
+    }
+    @keyframes headBob {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(-4px) rotate(3deg); }
+    }
+    @keyframes gesture {
+      0% { transform: rotate(-20deg); }
+      100% { transform: rotate(-75deg); }
+    }
+    @keyframes dramaticShake {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(-10px, 5px); }
+      50% { transform: translate(10px, -5px); }
+      75% { transform: translate(-10px, -5px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage" id="stage">
+    <div class="dialogue-box">
+      <span class="speaker" id="speaker">...</span>
+      <span id="text"></span>
+    </div>
+
+    <!-- You (No-leg / Wheelchair Character) -->
+    <div class="character" id="protag">
+      <div class="head">
+        <div class="eyebrow left"></div>
+        <div class="eyebrow right"></div>
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="mouth"></div>
+      </div>
+      <div class="torso-protag">
+        <div class="arm"></div>
+      </div>
+      <div class="wheelchair">
+        <div class="wheel-big"></div>
+        <div class="wheel-small"></div>
+      </div>
+    </div>
+
+    <!-- Rival -->
+    <div class="character" id="rival">
+      <div class="head">
+        <div class="eyebrow left"></div>
+        <div class="eyebrow right"></div>
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="mouth"></div>
+      </div>
+      <div class="torso-rival"></div>
+      <div class="legs-rival"><div class="leg-split"></div></div>
+    </div>
+  </div>
+
+  <script>
+    const script = [
+      { who: "rival", name: "The Rival", line: "You dare challenge me?! You don't even have a leg to stand on!", shake: true },
+      { who: "protag", name: "You", line: "I don't need legs to tower over a coward like you!", shake: true },
+      { who: "rival", name: "The Rival", line: "Impossible... that sheer willpower!!", shake: false },
+      { who: "protag", name: "You", line: "My spirit is unbreakable. Now, prepare yourself!", shake: true }
+    ];
+
+    let index = 0;
+    const protag = document.getElementById('protag');
+    const rival = document.getElementById('rival');
+    const speakerEl = document.getElementById('speaker');
+    const textEl = document.getElementById('text');
+    const stage = document.getElementById('stage');
+
+    function playDialogue() {
+      const current = script[index];
+      
+      // Reset animations
+      protag.classList.remove('talking');
+      rival.classList.remove('talking');
+      stage.classList.remove('shake');
+
+      // Trigger active speaker
+      speakerEl.textContent = current.name;
+      textEl.textContent = `"${current.line}"`;
+
+      if (current.who === 'protag') {
+        protag.classList.add('talking');
+      } else {
+        rival.classList.add('talking');
+      }
+
+      if (current.shake) {
+        void stage.offsetWidth; // Force reflow to restart animation
+        stage.classList.add('shake');
+      }
+
+      index = (index + 1) % script.length;
+    }
+
+    playDialogue();
+    setInterval(playDialogue, 4000);
+  </script>
+</body>
+</html>

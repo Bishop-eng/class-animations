@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moving Car - Left to Right</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 2px solid #ffffff;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="carCanvas" width="600" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('carCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Car position and speed
+        let carX = -100; // Starts off-screen on the left
+        let carY = 280;
+        let carSpeed = 3; // You can change this to make it faster (e.g., 6)
+
+        function animate() {
+            // 1. Draw background (Sky)
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, 600, 400);
+
+            // 2. Draw road
+            ctx.fillStyle = '#323232';
+            ctx.fillRect(0, 300, 600, 100);
+
+            // 3. Draw road stripe
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, 350);
+            ctx.lineTo(600, 350);
+            ctx.stroke();
+
+            // 4. Draw car body (Red)
+            ctx.fillStyle = '#C80000';
+            ctx.fillRect(carX, carY, 80, 30);
+
+            // 5. Draw car roof (Red)
+            ctx.fillRect(carX + 20, carY - 20, 40, 25);
+
+            // 6. Draw back wheel (Black)
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.arc(carX + 20, carY + 30, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 7. Draw front wheel (Black)
+            ctx.beginPath();
+            ctx.arc(carX + 60, carY + 30, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Update car position (Moving right)
+            carX += carSpeed;
+            if (carX < -100) {
+                carX = 700 // Loop back to the left side
+            }
+
+            // Loop the animation
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation loop
+        animate();
+    </script>
+
+</body>
+</html>

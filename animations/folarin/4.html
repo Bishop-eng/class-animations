@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Watching Orbiting Mouse</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #2c3e50;
+        }
+        canvas {
+            background: #f5f6fa;
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const orbitRadius = 190;
+        let mouseAngle = 0;
+
+        function drawCat(mouseX, mouseY) {
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            // Swishing Tail
+            const tailWag = Math.sin(mouseAngle * 3) * 0.4;
+            ctx.save();
+            ctx.rotate(tailWag);
+            ctx.strokeStyle = '#e67e22';
+            ctx.lineWidth = 12;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(0, 45);
+            ctx.quadraticCurveTo(45, 85, 70, 55);
+            ctx.stroke();
+            ctx.restore();
+
+            // Cat Body
+            ctx.fillStyle = '#e67e22';
+            ctx.beginPath();
+            ctx.ellipse(0, 25, 42, 50, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ears
+            ctx.fillStyle = '#d35400';
+            ctx.beginPath();
+            ctx.moveTo(-42, -30);
+            ctx.lineTo(-28, -75);
+            ctx.lineTo(-8, -42);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(42, -30);
+            ctx.lineTo(28, -75);
+            ctx.lineTo(8, -42);
+            ctx.fill();
+
+            // Cat Head
+            ctx.fillStyle = '#f39c12';
+            ctx.beginPath();
+            ctx.arc(0, -25, 45, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Eyes (Tracking the Mouse!)
+            const eyeOffsets = [-16, 16];
+            eyeOffsets.forEach(offsetX => {
+                const eyeX = offsetX;
+                const eyeY = -32;
+
+                // Sclera
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(eyeX, eyeY, 12, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Calculate angle from eye to mouse
+                const dx = mouseX - (cx + eyeX);
+                const dy = mouseY - (cy + eyeY);
+                const angleToMouse = Math.atan2(dy, dx);
+
+                // Pupil
+                const pupilX = eyeX + Math.cos(angleToMouse) * 5;
+                const pupilY = eyeY + Math.sin(angleToMouse) * 5;
+                ctx.fillStyle = '#111';
+                ctx.beginPath();
+                ctx.ellipse(pupilX, pupilY, 4.5, 8, 0, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Nose & Whiskers
+            ctx.fillStyle = '#ff7675';
+            ctx.beginPath();
+            ctx.moveTo(-5, -16);
+            ctx.lineTo(5, -16);
+            ctx.lineTo(0, -10);
+            ctx.fill();
+
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1.5;
+            [-1, 1].forEach(side => {
+                ctx.beginPath();
+                ctx.moveTo(side * 15, -14);
+                ctx.lineTo(side * 45, -18);
+                ctx.moveTo(side * 15, -10);
+                ctx.lineTo(side * 45, -8);
+                ctx.stroke();
+            });
+
+            ctx.restore();
+        }
+
+        function drawMouse(x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            // Orient mouse along tangent of circle
+            ctx.rotate(angle + Math.PI / 2);
+
+            // Tail
+            ctx.strokeStyle = '#fab1a0';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-18, 0);
+            ctx.quadraticCurveTo(-32, Math.sin(angle * 8) * 10, -42, 0);
+            ctx.stroke();
+
+            // Mouse Body
+            ctx.fillStyle = '#95a5a6';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 18, 11, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Ears
+            ctx.fillStyle = '#fab1a0';
+            ctx.beginPath();
+            ctx.arc(8, -10, 6, 0, Math.PI * 2);
+            ctx.arc(8, 10, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nose
+            ctx.fillStyle = '#ff7675';
+            ctx.beginPath();
+            ctx.arc(19, 0, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Rug underneath cat
+            ctx.beginPath();
+            ctx.arc(cx, cy, 230, 0, Math.PI * 2);
+            ctx.fillStyle = '#dfe6e9';
+            ctx.fill();
+
+            const mouseX = cx + Math.cos(mouseAngle) * orbitRadius;
+            const mouseY = cy + Math.sin(mouseAngle) * orbitRadius;
+
+            drawCat(mouseX, mouseY);
+            drawMouse(mouseX, mouseY, mouseAngle);
+
+            mouseAngle += 0.025;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+* { box-sizing: border-box; margin: 0; }
+body { font-family: system-ui, sans-serif; background: #0b0b0f; color: #fff; }
+header { text-align: center; padding: 2.5rem 1rem 1rem; }
+header p { color: #9ca3af; margin-top: .4rem; }
+main { max-width: 1000px; margin: 0 auto; padding: 1rem; }
+
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+.card { background: #16161d; border: 0; border-radius: 16px; padding: 1rem; color: #fff; cursor: pointer; text-align: center; }
+.card:hover { background: #20202b; }
+.card img, .initials { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; margin: 0 auto .6rem; display: block; }
+.initials { background: #2a2a38; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+.card span { display: block; font-weight: 600; }
+.card small { color: #9ca3af; }
+
+.modal { position: fixed; inset: 0; background: #0b0b0f; display: flex; flex-direction: column; z-index: 10; }
+.modal.hidden { display: none; }
+
+.topbar { display: flex; align-items: center; gap: .8rem; padding: .6rem 1rem; background: #13131a; flex-wrap: wrap; }
+.topbar img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #2a2a38; }
+.who h2 { font-size: 1rem; }
+.who p { color: #9ca3af; font-size: .8rem; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: .4rem; flex: 1; justify-content: center; }
+.tabs button { background: #20202b; color: #fff; border: 0; border-radius: 10px; padding: .45rem .8rem; cursor: pointer; }
+.tabs button.active { background: #fff; color: #000; }
+
+.actions { display: flex; align-items: center; gap: .5rem; }
+.actions button { background: #20202b; color: #fff; border: 0; border-radius: 10px; padding: .45rem .8rem; cursor: pointer; }
+.actions .close { font-size: 1.5rem; line-height: 1; padding: .2rem .7rem; }
+
+.stage { position: relative; flex: 1; min-height: 0; }
+iframe { width: 100%; height: 100%; border: 0; background: #fff; display: block; }
+
+.codebox { position: absolute; top: 0; right: 0; bottom: 0; width: min(480px, 90%); background: #0b0b0f; display: flex; flex-direction: column; box-shadow: -8px 0 24px rgba(0,0,0,.5); }
+.codebox.hidden { display: none; }
+.codebar { display: flex; justify-content: space-between; align-items: center; padding: .6rem .8rem; color: #9ca3af; font-size: .85rem; }
+.codebar button { background: #20202b; color: #fff; border: 0; border-radius: 8px; padding: .3rem .8rem; cursor: pointer; }
+pre { overflow: auto; padding: 0 .8rem .8rem; font-size: .8rem; flex: 1; }
+
+@media (max-width: 760px) {
+  .tabs { order: 3; flex-basis: 100%; justify-content: flex-start; }
+}

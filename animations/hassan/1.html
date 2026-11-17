@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Ball</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 2px solid #ffffff;
+            box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="ballCanvas" width="600" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('ballCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Ball properties
+        let x = 300;
+        let y = 50;
+        let radius = 40;
+        let velX = 4;
+        let velY = 0;
+        let gravity = 0.5;
+        let bounce = -0.8; // Energy retention after bounce
+
+        function animate() {
+            // 1. Apply physics
+            velY += gravity;
+            y += velY;
+            x += velX;
+
+            // 2. Floor collision
+            if (y + radius >= 400) {
+                y = 400 - radius;
+                velY *= bounce;
+            }
+
+            // 3. Wall collisions (Left and Right)
+            if (x - radius <= 0 || x + radius >= 600) {
+                velX *= -1;
+            }
+
+            // 4. Draw background
+            ctx.fillStyle = '#F0F0F0';
+            ctx.fillRect(0, 0, 600, 400);
+
+            // 5. Draw ball
+            ctx.fillStyle = '#0064FF';
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Loop the animation
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation loop
+        animate();
+    </script>
+
+</body>
+</html>

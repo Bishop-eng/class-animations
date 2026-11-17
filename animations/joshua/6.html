@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moving Car</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(to bottom, #74b9ff, #dfe6e9);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .road {
+      width: 100%;
+      height: 120px;
+      background: #2d3436;
+      position: relative;
+      border-top: 8px solid #636e72;
+    }
+    .lines {
+      width: 200%;
+      height: 8px;
+      background: repeating-linear-gradient(to right, #ffeaa7 0, #ffeaa7 60px, transparent 60px, transparent 120px);
+      position: absolute;
+      top: 50%;
+      animation: moveRoad 1s linear infinite;
+    }
+    .car {
+      position: absolute;
+      bottom: 90px;
+      left: -250px;
+      width: 220px;
+      height: 90px;
+      animation: drive 5s linear infinite, rumble 0.2s infinite;
+    }
+    .cabin {
+      width: 120px;
+      height: 45px;
+      background: #e17055;
+      border-radius: 30px 40px 0 0;
+      margin-left: 40px;
+      position: relative;
+    }
+    .window {
+      width: 45px;
+      height: 30px;
+      background: #81ecec;
+      border-radius: 20px 5px 0 0;
+      position: absolute;
+      top: 10px;
+      left: 15px;
+    }
+    .window.front {
+      left: 65px;
+      border-radius: 5px 25px 0 0;
+    }
+    .body {
+      width: 220px;
+      height: 45px;
+      background: #d63031;
+      border-radius: 20px 35px 10px 10px;
+      position: relative;
+    }
+    .headlight {
+      width: 15px;
+      height: 15px;
+      background: #ffeaa7;
+      border-radius: 50%;
+      position: absolute;
+      right: 5px;
+      top: 12px;
+      box-shadow: 20px 0 30px 10px rgba(255, 234, 167, 0.8);
+    }
+    .wheel {
+      width: 44px;
+      height: 44px;
+      background: #1e272e;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -20px;
+      border: 4px dashed #b2bec3;
+      box-sizing: border-box;
+      animation: spin 0.5s linear infinite;
+    }
+    .wheel.back { left: 30px; }
+    .wheel.front { right: 30px; }
+
+    @keyframes drive {
+      0% { left: -250px; }
+      100% { left: 110vw; }
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes moveRoad {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-120px); }
+    }
+    @keyframes rumble {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="car">
+    <div class="cabin">
+      <div class="window"></div>
+      <div class="window front"></div>
+    </div>
+    <div class="body">
+      <div class="headlight"></div>
+      <div class="wheel back"></div>
+      <div class="wheel front"></div>
+    </div>
+  </div>
+  <div class="road">
+    <div class="lines"></div>
+  </div>
+</body>
+</html>

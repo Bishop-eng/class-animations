@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moving Car</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(#7ec8f2 50%,#7cbf5a 50%);font-family:system-ui,sans-serif}
+  svg{position:absolute;inset:0;width:100%;height:100%}
+  .label{position:fixed;top:18px;width:100%;text-align:center;color:#1d3557;font-size:14px;letter-spacing:.08em;font-weight:600}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ec8f2"/><stop offset="1" stop-color="#d4f1ff"/></linearGradient>
+    <g id="cloud"><circle cx="0" cy="0" r="26"/><circle cx="30" cy="-14" r="32"/><circle cx="62" cy="0" r="24"/><rect x="0" y="0" width="62" height="24"/></g>
+    <clipPath id="screen"><rect width="1000" height="600"/></clipPath>
+  </defs>
+  <g clip-path="url(#screen)">
+    <rect width="1000" height="360" fill="url(#sky)"/>
+    <circle cx="850" cy="95" r="62" fill="#ffd84d" opacity=".25"/><circle cx="850" cy="95" r="45" fill="#ffd84d"/>
+    <g fill="#fff" opacity=".95">
+      <use href="#cloud"><animateTransform attributeName="transform" type="translate" from="-100 90" to="1050 90" dur="60s" begin="-20s" repeatCount="indefinite"/></use>
+      <use href="#cloud"><animateTransform attributeName="transform" type="translate" from="-100 170" to="1050 170" dur="90s" begin="-60s" repeatCount="indefinite"/></use>
+    </g>
+    <rect y="360" width="1000" height="240" fill="#7cbf5a"/>
+    <rect y="400" width="1000" height="110" fill="#3b3d45"/>
+    <rect y="400" width="1000" height="5" fill="#5a5d66"/><rect y="505" width="1000" height="5" fill="#5a5d66"/>
+    <g fill="#f5f5f5"><rect x="0" y="453" width="40" height="5"/><rect x="80" y="453" width="40" height="5"/><rect x="160" y="453" width="40" height="5"/><rect x="240" y="453" width="40" height="5"/><rect x="320" y="453" width="40" height="5"/><rect x="400" y="453" width="40" height="5"/><rect x="480" y="453" width="40" height="5"/><rect x="560" y="453" width="40" height="5"/><rect x="640" y="453" width="40" height="5"/><rect x="720" y="453" width="40" height="5"/><rect x="800" y="453" width="40" height="5"/><rect x="880" y="453" width="40" height="5"/><rect x="960" y="453" width="40" height="5"/></g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-240 482" to="1010 482" dur="5s" repeatCount="indefinite"/>
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 -1.5;0 0" dur=".3s" repeatCount="indefinite"/>
+        <path d="M0 -30 L0 -55 Q2 -66 22 -68 L55 -70 L85 -100 Q90 -104 100 -104 L155 -104 Q165 -104 173 -96 L195 -70 L212 -66 Q222 -63 222 -50 L222 -30 Z" fill="#e63946"/>
+        <path d="M92 -96 L114 -96 L114 -72 L68 -72 Z" fill="#a8dcff"/>
+        <path d="M122 -96 L155 -96 Q161 -96 167 -90 L183 -72 L122 -72 Z" fill="#a8dcff"/>
+        <rect x="212" y="-60" width="10" height="9" rx="2" fill="#fff3a0"/>
+        <rect x="0" y="-62" width="8" height="9" rx="2" fill="#ff4d4d"/>
+        <line x1="118" y1="-70" x2="118" y2="-34" stroke="#b5202c" stroke-width="2"/>
+      </g>
+      <g transform="translate(50,-22)"><g><animateTransform attributeName="transform" type="rotate" from="0" to="3255" dur="5s" repeatCount="indefinite"/><circle r="22" fill="#1b1b1f"/><circle r="10" fill="#bfc3cc"/><rect x="-2" y="-19" width="4" height="38" fill="#bfc3cc"/><rect x="-19" y="-2" width="38" height="4" fill="#bfc3cc"/></g></g>
+      <g transform="translate(172,-22)"><g><animateTransform attributeName="transform" type="rotate" from="0" to="3255" dur="5s" repeatCount="indefinite"/><circle r="22" fill="#1b1b1f"/><circle r="10" fill="#bfc3cc"/><rect x="-2" y="-19" width="4" height="38" fill="#bfc3cc"/><rect x="-19" y="-2" width="38" height="4" fill="#bfc3cc"/></g></g>
+    </g>
+  </g>
+</svg>
+<div class="label">MOVING CAR: EDGE TO EDGE</div>
+</body>
+</html>

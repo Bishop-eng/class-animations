@@ -1,0 +1,77 @@
+<!DOCTYPE html> <!-- HTML5 page -->
+<html> <!-- root element -->
+<head> <!-- page settings -->
+<title>Bouncing Ball</title> <!-- browser tab title -->
+<style> /* CSS starts */
+  body { margin: 0; background: #222; } /* no margin, dark background */
+  canvas { display: block; margin: 20px auto; background: #f0f0f0; border: 2px solid #000; } /* centred light canvas with border */
+</style> <!-- CSS ends -->
+</head> <!-- end head -->
+<body> <!-- visible content -->
+<canvas id="c" width="700" height="450"></canvas> <!-- 700x450 drawing area -->
+<script> // JavaScript starts
+const canvas = document.getElementById("c"); // get the canvas element
+const ctx = canvas.getContext("2d"); // get the 2D drawing tool
+
+const radius = 30; // ball radius in pixels
+let x = 100, y = 80; // ball's starting position
+let vx = 4; // horizontal speed (positive = moving right)
+let vy = 0; // vertical speed (starts at rest)
+const gravity = 0.5; // added to vy every frame, pulling the ball down
+const bounce = 0.9; // fraction of speed kept after hitting the floor
+const floor = canvas.height - 20; // y position of the floor's top edge
+const minBounceSpeed = 3; // if a bounce is weaker than this, re-launch the ball
+const launchSpeed = 18; // upward speed used to re-launch the ball
+
+function drawFloor() { // draws the floor
+  ctx.fillStyle = "#555"; // dark grey
+  ctx.fillRect(0, floor, canvas.width, 20); // strip across the bottom
+} // end drawFloor
+
+function drawShadow() { // draws a shadow under the ball
+  const height = floor - y; // how high the ball is above the floor
+  const scale = Math.max(0.3, 1 - height / 500); // shadow shrinks with height, min 0.3
+  ctx.fillStyle = "rgba(0,0,0,0.3)"; // transparent black
+  ctx.beginPath(); // new shape
+  ctx.ellipse(x, floor, radius * scale, 7 * scale, 0, 0, Math.PI * 2); // flat oval under the ball
+  ctx.fill(); // fill the shadow
+} // end drawShadow
+
+function drawBall() { // draws the ball
+  const g = ctx.createRadialGradient(x - 10, y - 10, 5, x, y, radius); // highlight-to-edge gradient
+  g.addColorStop(0, "#ff9a9a"); // light pink highlight
+  g.addColorStop(1, "#d10000"); // dark red edge (3D look)
+  ctx.fillStyle = g; // use the gradient as fill
+  ctx.beginPath(); // new shape
+  ctx.arc(x, y, radius, 0, Math.PI * 2); // circle at the ball's position
+  ctx.fill(); // fill
+} // end drawBall
+
+function animate() { // animation loop
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // erase the previous frame
+  drawFloor(); // floor
+  drawShadow(); // shadow first so the ball sits on top
+  drawBall(); // ball
+
+  vy += gravity; // gravity increases downward speed
+  y += vy; // move vertically
+  x += vx; // move horizontally
+
+  if (y + radius > floor) { // ball's bottom below the floor?
+    y = floor - radius; // put it exactly on the floor
+    vy = -vy * bounce; // reverse direction, lose a little energy
+    if (Math.abs(vy) < minBounceSpeed) { // bounce too weak?
+      vy = -launchSpeed; // fresh upward kick so it keeps bouncing
+    } // end inner if
+  } // end floor if
+
+  if (x + radius > canvas.width || x - radius < 0) { // hit left or right wall?
+    vx = -vx; // reverse horizontal direction
+  } // end wall if
+
+  requestAnimationFrame(animate); // schedule the next frame
+} // end animate
+animate(); // start the animation
+</script> <!-- JavaScript ends -->
+</body> <!-- end body -->
+</html> <!-- end page -->

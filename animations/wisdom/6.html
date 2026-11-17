@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPE505 - Moon moving across the sky</title>
+
+<!--
+  HOW TO EDIT THIS FILE
+  Change the values under "Settings for the moon" in the script: MOON_RADIUS, MOON_COLOR, MOON_START_X, MOON_END_X, MOON_ARC and MOON_SECONDS.
+  Page colours are in the CSS below (the body rule).
+-->
+
+<style>
+  body { margin: 0; padding: 16px; background: rgb(242, 238, 238); color: midnightblue;
+         font-family: system-ui, sans-serif; }
+  h1 { text-align: center; font-size: 22px; margin: 4px 0 16px; }
+
+  /* The animation sits in one card (section), centred on the page. */
+  section { max-width: 520px; margin: 0 auto; background: white; border: 1px solid lightgray;
+            border-radius: 12px; padding: 12px; }
+  h2 { margin: 0 0 10px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+
+  /* The round number badge in front of the title. */
+  .num { background: midnightblue; color: white; width: 26px; height: 26px; border-radius: 50%;
+         display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+
+  /* The canvas is the drawing area. It scales to the width of the card. */
+  canvas { width: 100%; height: auto; display: block; border-radius: 8px; }
+</style>
+</head>
+<body>
+
+<h1>2D Animation: Moon moving across the sky</h1>
+
+<section><h2><span class="num">3</span> Moon moving across the sky</h2><canvas id="moonCanvas" width="480" height="300"></canvas></section>
+
+<script>
+/* =====================================================================
+   HOW THE PAGE WORKS
+   The canvas is a drawing board, and the "context" (g) is the pen.
+   Every frame, the code erases the board, draws the picture again, and
+   moves the objects by a small amount.
+   ===================================================================== */
+
+const moonCanvas = document.getElementById('moonCanvas');
+const gMoon = moonCanvas.getContext('2d');
+const W = 480, H = 300;           // the size of the canvas, in pixels
+
+
+/* =====================================================================
+   SECTION 3: THE MOON MOVING FROM ONE POINT TO ANOTHER
+   ===================================================================== */
+
+// ----- Settings for the moon -----
+const MOON_RADIUS  = 40;
+const MOON_COLOR   = 'lightyellow';
+const CRATER_COLOR = 'khaki';
+const MOON_START_X = -50;          // point A (left)
+const MOON_END_X   = W - 50;      // point B (right); swap the two values to reverse the path
+const MOON_BASE_Y  = H - 60;      // the height of points A and B
+const MOON_ARC     = 170;         // how high the path rises between A and B
+const MOON_SECONDS = 8;          // time for one journey; a smaller value is faster
+
+// Craters: position and size as fractions of the moon radius.
+const craters = [[-0.35, -0.30, 0.22], [0.30, -0.10, 0.28], [-0.10, 0.35, 0.18], [0.40, 0.45, 0.12]];
+
+// Stars have fixed random positions and a random start time for the twinkle.
+const stars = [];
+for (let i = 0; i < 60; i++) {
+  stars.push({ x: Math.random() * W, y: Math.random() * (H - 80), phase: Math.random() * 6 });
+}
+
+let moonTime = 0;                 // seconds since the journey began
+let moonX = MOON_START_X, moonY = MOON_BASE_Y;
+
+function updateMoon(dt) {
+  moonTime += dt;
+  const t = (moonTime % MOON_SECONDS) / MOON_SECONDS;   // progress: 0 at point A, 1 at point B
+
+  // The x position moves in a straight line from A to B.
+  moonX = MOON_START_X + (MOON_END_X - MOON_START_X) * t;
+  // A sine curve lifts the moon: zero at both ends and highest in the middle.
+  // On a canvas, y grows downward, so the lift is subtracted.
+  moonY = MOON_BASE_Y - MOON_ARC * Math.sin(Math.PI * t);
+}
+
+function drawMoon() {
+  const g = gMoon;
+  g.clearRect(0, 0, W, H);
+
+  g.fillStyle = 'midnightblue';                  // the night sky
+  g.fillRect(0, 0, W, H);
+
+  // Stars twinkle because their transparency changes slowly with time.
+  g.fillStyle = 'white';
+  stars.forEach(function (s) {
+    g.globalAlpha = 0.5 + 0.5 * Math.sin(moonTime * 2 + s.phase);
+    g.fillRect(s.x, s.y, 2, 2);
+  });
+  g.globalAlpha = 1;
+
+  // A dotted line shows the route that the moon follows.
+  g.strokeStyle = 'white';
+  g.globalAlpha = 0.3;
+  g.setLineDash([4, 6]);
+  g.beginPath();
+  for (let i = 0; i <= 40; i++) {
+    const t = i / 40;
+    const x = MOON_START_X + (MOON_END_X - MOON_START_X) * t;
+    const y = MOON_BASE_Y - MOON_ARC * Math.sin(Math.PI * t);
+    if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+  }
+  g.stroke();
+  g.setLineDash([]);
+  g.globalAlpha = 1;
+
+  // The ground, with labels for the two end points.
+  g.fillStyle = 'black';
+  g.fillRect(0, H - 40, W, 40);
+  g.fillStyle = 'white';
+  g.font = '14px system-ui, sans-serif';
+  g.textAlign = 'center';
+  g.fillText('A', MOON_START_X, H - 15);
+  g.fillText('B', MOON_END_X, H - 15);
+
+  // A soft glow around the moon: a gradient that fades from the moon colour to nothing.
+  const glow = g.createRadialGradient(moonX, moonY, MOON_RADIUS, moonX, moonY, MOON_RADIUS * 2.4);
+  glow.addColorStop(0, 'rgba(255, 255, 200, 0.35)');
+  glow.addColorStop(1, 'rgba(255, 255, 200, 0)');
+  g.fillStyle = glow;
+  g.beginPath(); g.arc(moonX, moonY, MOON_RADIUS * 2.4, 0, Math.PI * 2); g.fill();
+
+  // The moon itself. The gradient is brighter on the upper left, like a lit ball.
+  const body = g.createRadialGradient(moonX - MOON_RADIUS * 0.4, moonY - MOON_RADIUS * 0.4, 2,
+                                      moonX, moonY, MOON_RADIUS);
+  body.addColorStop(0, 'white');
+  body.addColorStop(0.5, MOON_COLOR);
+  body.addColorStop(1, 'darkgray');
+  g.fillStyle = body;
+  g.beginPath(); g.arc(moonX, moonY, MOON_RADIUS, 0, Math.PI * 2); g.fill();
+
+  // Craters are drawn on top of the moon.
+  g.fillStyle = CRATER_COLOR;
+  g.globalAlpha = 0.6;
+  craters.forEach(function (c) {
+    g.beginPath();
+    g.arc(moonX + c[0] * MOON_RADIUS, moonY + c[1] * MOON_RADIUS, c[2] * MOON_RADIUS, 0, Math.PI * 2);
+    g.fill();
+  });
+  g.globalAlpha = 1;
+}
+
+
+/* =====================================================================
+   THE ANIMATION LOOP
+   The browser calls animate() before every screen refresh, about 60 times
+   per second. dt is the time since the last frame, in seconds. Using dt
+   keeps the speed the same on fast and slow computers.
+   ===================================================================== */
+let lastTime = performance.now();
+
+function animate(now) {
+  const dt = Math.min((now - lastTime) / 1000, 0.05);  // the limit avoids jumps after a pause
+  lastTime = now;
+
+  updateMoon(dt);  drawMoon();
+
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

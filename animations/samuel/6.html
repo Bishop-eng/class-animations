@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>6 · Moon moving across the sky</title>
+<style>
+
+:root{--bg:#f6f5f1;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e2e0d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}}
+:root[data-theme="dark"]{--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+main{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin:8px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 8px;color:var(--muted);font-weight:600}
+svg{width:100%;height:auto;display:block;border-radius:8px}
+svg text{font-family:system-ui,sans-serif}
+
+
+
+.mx{animation:mx 14s linear infinite}
+@keyframes mx{from{transform:translateX(-50px)}to{transform:translateX(370px)}}
+.my{animation:my 14s ease-in-out infinite}
+@keyframes my{0%,100%{transform:translateY(130px)}50%{transform:translateY(50px)}}
+.st{animation:tw 2s ease-in-out infinite alternate}
+.st:nth-child(2n){animation-delay:.7s}.st:nth-child(3n){animation-delay:1.3s}
+@keyframes tw{from{opacity:.2}to{opacity:1}}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<main>
+<div class="card"><h2>6 · Moon moving across the sky</h2>
+<svg viewBox="0 0 320 200"><defs><linearGradient id="ns" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#050a24"/><stop offset="1" stop-color="#1b2a5c"/></linearGradient>
+<mask id="m"><rect x="-40" y="-40" width="80" height="80" fill="#fff"/><circle cx="10" cy="-4" r="19" fill="#000"/></mask></defs>
+<rect width="320" height="200" fill="url(#ns)"/>
+<g fill="#fff"><circle class="st" cx="30" cy="30" r="1.5"/><circle class="st" cx="80" cy="60" r="1"/><circle class="st" cx="130" cy="25" r="1.5"/><circle class="st" cx="190" cy="50" r="1"/><circle class="st" cx="240" cy="20" r="1.5"/><circle class="st" cx="290" cy="65" r="1"/><circle class="st" cx="60" cy="100" r="1"/><circle class="st" cx="270" cy="110" r="1.5"/><circle class="st" cx="160" cy="90" r="1"/></g>
+<g class="mx"><g class="my"><circle r="34" fill="#f5e9b8" opacity=".12"/><circle r="22" fill="#f5e9b8" mask="url(#m)"/></g></g>
+<path d="M0 200V170q40-25 80-8t90-4 80 10 70-8v40z" fill="#0a0f26"/></svg></div>
+</main>
+</body>
+</html>

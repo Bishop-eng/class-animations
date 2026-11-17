@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4 · Ball bouncing from edge to edge</title>
+<style>
+
+:root{--bg:#f6f5f1;--card:#fff;--text:#1d1d1b;--muted:#6b6a65;--line:#e2e0d8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}}
+:root[data-theme="dark"]{--bg:#161615;--card:#222221;--text:#f0efea;--muted:#a3a29b;--line:#34332f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+main{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin:8px 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 8px;color:var(--muted);font-weight:600}
+svg{width:100%;height:auto;display:block;border-radius:8px}
+svg text{font-family:system-ui,sans-serif}
+
+
+
+.bx{animation:bx 3s linear infinite alternate}
+@keyframes bx{to{transform:translateX(292px)}}
+.by{animation:by 1.2s infinite}
+@keyframes by{0%,100%{transform:translateY(-130px);animation-timing-function:ease-in}50%{transform:translateY(0);animation-timing-function:ease-out}}
+
+
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<main>
+<div class="card"><h2>4 · Ball bouncing from edge to edge</h2>
+<svg viewBox="0 0 320 200"><rect width="320" height="200" fill="#e3f2fd"/><rect y="180" width="320" height="20" fill="#81c784"/>
+<g class="bx"><ellipse cx="14" cy="181" rx="12" ry="3" fill="#000" opacity=".2"/>
+<g class="by"><circle cx="14" cy="168" r="12" fill="#e53935"/><path d="M4 168h20M14 156v24" stroke="#fff" stroke-width="1.5" opacity=".7"/><circle cx="10" cy="163" r="3" fill="#fff" opacity=".5"/></g></g></svg></div>
+</main>
+</body>
+</html>

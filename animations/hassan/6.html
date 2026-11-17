@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dramatic Conversation</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        canvas {
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas" width="700" height="450"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let frame = 0;
+
+    // Dramatic back-and-forth script between two people
+    const script = [
+        { speaker: "LEFT",  text: "You really thought I wouldn't show up today?!" },
+        { speaker: "RIGHT", text: "I told you the stairs were blocked! How did you get up here?!" },
+        { speaker: "LEFT",  text: "Pure willpower! Nothing stops me when I make a promise!" },
+        { speaker: "RIGHT", text: "You're completely out of your mind, man!" },
+        { speaker: "LEFT",  text: "Maybe so—but I'm here, and you owe me an explanation!" },
+        { speaker: "RIGHT", text: "...Alright, sit down. Let's talk." }
+    ];
+
+    let step = 0;
+
+    function drawSpeechBubble(x, y, text, alignRight, isDramatic) {
+        ctx.font = isDramatic ? "bold 14px Segoe UI" : "14px Segoe UI";
+        const padding = 14;
+        const textWidth = ctx.measureText(text).width;
+        const boxWidth = textWidth + padding * 2;
+        const boxHeight = 42;
+        const boxX = alignRight ? x - boxWidth : x;
+        const boxY = y - boxHeight;
+
+        // Bubble background
+        ctx.fillStyle = isDramatic ? "#e63946" : "#ffffff";
+        ctx.beginPath();
+        ctx.roundRect(boxX, boxY, boxWidth, boxHeight, 10);
+        ctx.fill();
+
+        // Pointer triangle
+        ctx.beginPath();
+        if (!alignRight) {
+            ctx.moveTo(boxX + 20, boxY + boxHeight);
+            ctx.lineTo(boxX + 10, boxY + boxHeight + 12);
+            ctx.lineTo(boxX + 35, boxY + boxHeight);
+        } else {
+            ctx.moveTo(boxX + boxWidth - 20, boxY + boxHeight);
+            ctx.lineTo(boxX + boxWidth - 10, boxY + boxHeight + 12);
+            ctx.lineTo(boxX + boxWidth - 35, boxY + boxHeight);
+        }
+        ctx.fill();
+
+        // Bubble Text
+        ctx.fillStyle = isDramatic ? "#ffffff" : "#111111";
+        ctx.fillText(text, boxX + padding, boxY + 26);
+    }
+
+    // Person on the Left (No legs, seated in a wheelchair)
+    function drawLeglessPerson(x, baseY, isSpeaking, frameCount) {
+        // Ground Shadow
+        ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.beginPath();
+        ctx.ellipse(x, baseY + 110, 45, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wheelchair Backrest & Seat
+        ctx.strokeStyle = "#adb5bd";
+        ctx.lineWidth = 6;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(x - 28, baseY - 25); // Backrest top
+        ctx.lineTo(x - 28, baseY + 55); // Seat corner
+        ctx.lineTo(x + 28, baseY + 55); // Seat front (empty underneath - no legs)
+        ctx.stroke();
+
+        // Torso (Ends at the seat, clearly showing no legs)
+        ctx.fillStyle = "#e63946";
+        ctx.beginPath();
+        ctx.roundRect(x - 22, baseY - 20, 44, 72, 10);
+        ctx.fill();
+
+        // Head
+        ctx.fillStyle = "#d4a373";
+        ctx.beginPath();
+        ctx.arc(x, baseY - 50, 25, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hair
+        ctx.fillStyle = "#1d1e22";
+        ctx.beginPath();
+        ctx.arc(x, baseY - 54, 25, Math.PI, Math.PI * 2);
+        ctx.fill();
+
+        // Eyes (looking right)
+        ctx.fillStyle = "#111";
+        ctx.beginPath(); ctx.arc(x + 4, baseY - 52, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x + 16, baseY - 52, 3.5, 0, Math.PI * 2); ctx.fill();
+
+        // Dramatic Eyebrows
+        if (isSpeaking) {
+            ctx.strokeStyle = "#111";
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(x + 1, baseY - 60); ctx.lineTo(x + 9, baseY - 56);
+            ctx.moveTo(x + 20, baseY - 60); ctx.lineTo(x + 13, baseY - 56);
+            ctx.stroke();
+        }
+
+        // Animated Mouth
+        ctx.fillStyle = "#6b1d24";
+        const mouthOpen = isSpeaking ? Math.abs(Math.sin(frameCount * 0.4)) * 8 + 2 : 2;
+        ctx.beginPath();
+        ctx.ellipse(x + 10, baseY - 38, 6, mouthOpen / 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dramatic Gesturing Arm
+        const gesture = isSpeaking ? Math.sin(frameCount * 0.25) * 22 : 0;
+        ctx.strokeStyle = "#d4a373";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(x + 5, baseY - 5);
+        ctx.lineTo(x + 48, baseY - 10 - gesture);
+        ctx.stroke();
+
+        // Wheelchair Big Wheel (Drawn in front of the seat)
+        ctx.strokeStyle = "#495057";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.arc(x - 10, baseY + 75, 32, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "#ced4da";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x - 10, baseY + 75, 25, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Small Front Caster Wheel
+        ctx.fillStyle = "#495057";
+        ctx.beginPath();
+        ctx.arc(x + 26, baseY + 98, 9, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Person on the Right (Standing with legs)
+    function drawStandingPerson(x, baseY, isSpeaking, frameCount) {
+        // Ground Shadow
+        ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.beginPath();
+        ctx.ellipse(x, baseY + 110, 35, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Legs
+        ctx.strokeStyle = "#1d3557";
+        ctx.lineWidth = 12;
+        ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(x - 12, baseY + 40); ctx.lineTo(x - 15, baseY + 105); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x + 12, baseY + 40); ctx.lineTo(x + 15, baseY + 105); ctx.stroke();
+
+        // Torso
+        ctx.fillStyle = "#457b9d";
+        ctx.beginPath();
+        ctx.roundRect(x - 24, baseY - 35, 48, 80, 10);
+        ctx.fill();
+
+        // Head
+        ctx.fillStyle = "#ffcdb2";
+        ctx.beginPath();
+        ctx.arc(x, baseY - 65, 25, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hair
+        ctx.fillStyle = "#3d2c2e";
+        ctx.beginPath();
+        ctx.arc(x, baseY - 69, 25, Math.PI, Math.PI * 2);
+        ctx.fill();
+
+        // Eyes (looking left)
+        ctx.fillStyle = "#111";
+        ctx.beginPath(); ctx.arc(x - 14, baseY - 68, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x - 2, baseY - 68, 3.5, 0, Math.PI * 2); ctx.fill();
+
+        // Animated Mouth
+        ctx.fillStyle = "#9e2a2b";
+        const mouthOpen = isSpeaking ? Math.abs(Math.sin(frameCount * 0.35)) * 7 + 2 : 2;
+        ctx.beginPath();
+        ctx.ellipse(x - 8, baseY - 53, 6, mouthOpen / 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Gesturing Arm
+        const gesture = isSpeaking ? Math.sin(frameCount * 0.22) * 18 : 0;
+        ctx.strokeStyle = "#ffcdb2";
+        ctx.lineWidth = 8;
+        ctx.beginPath();
+        ctx.moveTo(x - 10, baseY - 15);
+        ctx.lineTo(x - 48, baseY - 5 - gesture);
+        ctx.stroke();
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, 700, 450);
+        frame++;
+
+        // Switch dialogue every 165 frames (~2.7 seconds)
+        if (frame % 165 === 0) {
+            step = (step + 1) % script.length;
+        }
+
+        const currentLine = script[step];
+        const leftTalking = currentLine.speaker === "LEFT";
+
+        // 1. Background Stage
+        ctx.fillStyle = "#1b2028";
+        ctx.fillRect(0, 0, 700, 340);
+
+        // Floor
+        ctx.fillStyle = "#2b303a";
+        ctx.fillRect(0, 340, 700, 110);
+
+        // Dramatic Spotlight on active speaker
+        const spotX = leftTalking ? 180 : 520;
+        const grad = ctx.createRadialGradient(spotX, 220, 10, spotX, 220, 220);
+        grad.addColorStop(0, leftTalking ? "rgba(230, 57, 70, 0.25)" : "rgba(255, 255, 255, 0.15)");
+        grad.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 700, 450);
+
+        // 2. Draw Both Human Characters
+        drawLeglessPerson(180, 240, leftTalking, frame);
+        drawStandingPerson(520, 240, !leftTalking, frame);
+
+        // 3. Draw Speech Bubble above the speaker
+        if (leftTalking) {
+            drawSpeechBubble(140, 130, currentLine.text, false, true);
+        } else {
+            drawSpeechBubble(560, 115, currentLine.text, true, false);
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+
+</body>
+</html>
