@@ -38,7 +38,8 @@ function openStudent(s) {
   photo.onerror = () => photo.removeAttribute("src");
 
   tabsEl.innerHTML = "";
-  for (let n = 1; n <= 6; n++) {
+  const count = (s.titles && s.titles.length) || 6;
+  for (let n = 1; n <= count; n++) {
     const b = document.createElement("button");
     b.textContent = (s.titles && s.titles[n - 1]) || "Animation " + n;
     b.onclick = () => {

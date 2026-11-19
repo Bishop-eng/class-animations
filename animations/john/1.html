@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cat and Mouse Animation</title>
+<style>
+body{margin:0;background:#eaf6ff;font-family:Arial,sans-serif;text-align:center;color:#243447}
+h1{margin:24px 10px 6px}p{margin:6px}
+.scene{height:330px;max-width:700px;margin:25px auto;background:#c8efc5;border:4px solid #548b55;border-radius:18px;position:relative;overflow:hidden}
+.cat{position:absolute;left:45%;top:125px;font-size:85px;z-index:2}
+.mouse{position:absolute;left:50%;top:155px;font-size:35px;animation:circle 4s linear infinite}
+@keyframes circle{from{transform:rotate(0deg) translateX(125px) rotate(0deg)}to{transform:rotate(360deg) translateX(125px) rotate(-360deg)}}
+.grass{position:absolute;bottom:0;width:100%;height:35px;background:#78bd68}
+</style>
+</head>
+<body>
+<h1>🐱 Cat and Mouse</h1>
+<p>The mouse moves round the cat in a circular path.</p>
+<div class="scene"><div class="cat">🐱</div><div class="mouse">🐭</div><div class="grass"></div></div>
+</body>
+</html>

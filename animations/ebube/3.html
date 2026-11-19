@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dramatic conversation</title>
+<style>
+  :root { --bg:#f6f5f1; --card:#ffffff; --ink:#2c2c2a; --muted:#5f5e5a; --line:#d3d1c7; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1f1e1c; --card:#2a2927; --ink:#f1efe8; --muted:#b4b2a9; --line:#444441; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 520px; margin: 0 auto; display:flex; flex-direction:column; gap:20px; }
+  h1 { font-size:22px; font-weight:500; margin:0 0 4px; }
+  figure { margin:0; background:var(--card); border:0.5px solid var(--line); border-radius:12px; padding:12px; }
+  figcaption { font-size:14px; color:var(--muted); padding:4px 4px 0; }
+  svg { width:100%; height:auto; display:block; }
+  .t { font-size:14px; fill:var(--ink); }
+  .ts { font-size:12px; fill:var(--muted); }
+  .th { font-size:14px; font-weight:500; fill:#2c2c2a; }
+  .bubble { fill:#ffffff; stroke:#888780; stroke-width:0.8; }
+  button { font:inherit; font-size:14px; padding:8px 14px; border-radius:8px; border:0.5px solid var(--line);
+           background:transparent; color:var(--ink); cursor:pointer; margin-top:8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Dramatic conversation</h1>
+  <figure>
+    <svg viewBox="0 0 380 320" role="img" aria-label="A legless coral character in a wheelchair argues dramatically with a teal rival">
+      <rect width="380" height="320" fill="#E24B4A" opacity="0">
+        <animate attributeName="opacity" values="0;0;0.28;0;0.2;0;0" keyTimes="0;0.76;0.78;0.81;0.83;0.86;1" dur="12s" repeatCount="indefinite"/>
+      </rect>
+      <line x1="10" y1="282" x2="370" y2="282" stroke="#888780" stroke-width="0.5"/>
+
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-2 0;2 0;-2 0;2 0;0 0;0 0" keyTimes="0;0.77;0.79;0.81;0.83;0.85;0.87;1" dur="12s" repeatCount="indefinite"/>
+        <circle cx="100" cy="254" r="28" fill="none" stroke="#888780" stroke-width="3"/>
+        <circle cx="100" cy="254" r="3" fill="#888780"/>
+        <path d="M100,254 L100,226 M100,254 L124,268 M100,254 L76,268" stroke="#888780"/>
+        <circle cx="146" cy="274" r="8" fill="none" stroke="#888780" stroke-width="2.5"/>
+        <path d="M126,246 L146,266" stroke="#888780" stroke-width="3" stroke-linecap="round"/>
+        <rect x="68" y="238" width="62" height="9" rx="3" fill="#5F5E5A"/>
+        <path d="M66,240 L62,196" stroke="#5F5E5A" stroke-width="4" stroke-linecap="round"/>
+        <path d="M100,163 L100,142 M86,166 L74,150 M114,166 L126,150 M76,174 L60,164 M124,174 L140,164" stroke="#D97757" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="100" cy="202" rx="38" ry="40" fill="#D97757" stroke="#993C1D"/>
+        <circle cx="88" cy="194" r="4.5" fill="#2C2C2A"/>
+        <circle cx="112" cy="194" r="4.5" fill="#2C2C2A"/>
+        <path d="M82,184 L94,188 M118,184 L106,188" stroke="#4A1B0C" stroke-width="2" stroke-linecap="round"/>
+        <path d="M90,214 Q100,208 110,214" fill="none" stroke="#4A1B0C" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="84" cy="200" r="3" fill="#85B7EB" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.5;0.52;0.7;0.72;1" dur="12s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="200;200;200;218;218;200" keyTimes="0;0.5;0.52;0.7;0.72;1" dur="12s" repeatCount="indefinite"/>
+        </circle>
+        <path d="M66,215 Q78,240 90,236" fill="none" stroke="#D97757" stroke-width="7" stroke-linecap="round"/>
+        <path d="M134,215 Q122,240 110,236" fill="none" stroke="#D97757" stroke-width="7" stroke-linecap="round"/>
+      </g>
+
+      <g>
+        <path d="M278,232 L278,282 M302,232 L302,282" stroke="#0F6E56" stroke-width="9" stroke-linecap="round"/>
+        <ellipse cx="290" cy="192" rx="28" ry="46" fill="#1D9E75" stroke="#085041"/>
+        <circle cx="290" cy="140" r="24" fill="#1D9E75" stroke="#085041"/>
+        <circle cx="282" cy="140" r="3.5" fill="#04342C"/>
+        <circle cx="298" cy="140" r="3.5" fill="#04342C"/>
+        <path d="M275,130 L287,136 M305,130 L293,136" stroke="#04342C" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M282,154 Q290,148 298,154" fill="none" stroke="#04342C" stroke-width="2" stroke-linecap="round"/>
+        <path d="M264,190 L312,206 M316,190 L268,206" stroke="#0F6E56" stroke-width="8" stroke-linecap="round"/>
+      </g>
+
+      <text class="ts" x="100" y="304" text-anchor="middle">Claude</text>
+      <text class="ts" x="290" y="304" text-anchor="middle">Rival</text>
+
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.02;0.22;0.25;1" dur="12s" repeatCount="indefinite"/>
+        <rect class="bubble" x="50" y="14" width="310" height="52" rx="8"/>
+        <polygon class="bubble" points="276,66 304,66 290,108"/>
+        <text class="th" x="205" y="46" text-anchor="middle">You'll never reach the summit.</text>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.25;0.27;0.47;0.5;1" dur="12s" repeatCount="indefinite"/>
+        <rect class="bubble" x="20" y="14" width="310" height="52" rx="8"/>
+        <polygon class="bubble" points="86,66 114,66 100,134"/>
+        <text class="th" x="175" y="46" text-anchor="middle">I don't need legs to keep going.</text>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.5;0.52;0.72;0.75;1" dur="12s" repeatCount="indefinite"/>
+        <rect class="bubble" x="50" y="14" width="310" height="52" rx="8"/>
+        <polygon class="bubble" points="276,66 304,66 290,108"/>
+        <text class="th" x="205" y="46" text-anchor="middle">Then what do you have left?</text>
+      </g>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.75;0.77;0.95;0.99;1" dur="12s" repeatCount="indefinite"/>
+        <rect class="bubble" x="20" y="14" width="310" height="52" rx="8"/>
+        <polygon class="bubble" points="86,66 114,66 100,134"/>
+        <text class="th" x="175" y="46" text-anchor="middle">Everything that matters.</text>
+      </g>
+    </svg>
+    <figcaption>3. A dramatic conversation: threat, defiance, a tear, a comeback.</figcaption>
+  </figure>
+</main>
+</body>
+</html>

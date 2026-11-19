@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Rain Scene</title><style>
+html,body{margin:0;height:100%;background:#0a0c14;font-family:Georgia,serif;color:#f1ede4}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.stage{position:relative;width:min(96vw,900px)}svg{display:block;width:100%;height:auto}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:18px;min-height:76px;transition:opacity .4s}
+.cap b{display:block;font-size:13px;color:#e8b86d;font-weight:400;font-style:italic}
+.talk{animation:t .5s ease-in-out infinite alternate}@keyframes t{to{transform:translateY(-3px) rotate(-2deg)}}
+.arm{animation:a .4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:left center}@keyframes a{to{transform:rotate(-18deg)}}
+.rain line{stroke:#6f86b8;animation:r .7s linear infinite}@keyframes r{from{transform:translateY(-40px)}to{transform:translateY(420px)}}
+.flash{animation:f 7s infinite;fill:#fff;opacity:0}@keyframes f{0%,92%,96%,100%{opacity:0}93%{opacity:.25}95%{opacity:.12}}
+button{background:none;border:1px solid #9aa0b8;color:inherit;padding:6px 14px;border-radius:6px;cursor:pointer;font:inherit}
+</style></head><body>
+<div class="stage"><svg viewBox="0 0 640 360">
+<defs><radialGradient id="sp" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#f0d9a0" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<radialGradient id="vg" cx="50%" cy="50%" r="75%"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".8"/></radialGradient></defs>
+<rect width="640" height="360" fill="#10131f"/><rect width="640" height="360" fill="url(#sp)"/>
+<g class="rain"><line x1="40" y1="0" x2="36" y2="18"/><line x1="110" y1="0" x2="106" y2="18"/><line x1="190" y1="0" x2="186" y2="18"/><line x1="270" y1="0" x2="266" y2="18"/><line x1="350" y1="0" x2="346" y2="18"/><line x1="430" y1="0" x2="426" y2="18"/><line x1="510" y1="0" x2="506" y2="18"/><line x1="590" y1="0" x2="586" y2="18"/></g>
+<rect width="640" height="360" class="flash"/><rect y="290" width="640" height="70" fill="#1a1c2a"/>
+<g id="A" transform="translate(190,0)"><ellipse cx="0" cy="292" rx="55" ry="7" fill="#000" opacity=".5"/>
+<path d="M-34 292 Q-38 220 -22 190 L22 190 Q38 220 34 292 Z" fill="#3b6ea5"/><rect x="-8" y="172" width="16" height="20" fill="#d9a77c"/><circle cx="0" cy="155" r="20" fill="#d9a77c"/>
+<path d="M-20 150 Q-18 130 0 132 Q20 130 20 150 Q8 140 -20 150Z" fill="#2a1a12"/><circle cx="-7" cy="156" r="2" fill="#111"/><circle cx="7" cy="156" r="2" fill="#111"/>
+<path d="M-6 166 Q0 168 6 166" stroke="#7a3a2a" stroke-width="2" fill="none"/>
+<g><path d="M-26 200 L-52 245" stroke="#3b6ea5" stroke-width="12" stroke-linecap="round"/><circle cx="-54" cy="249" r="6" fill="#d9a77c"/></g>
+<g id="armA"><path d="M26 200 L58 235" stroke="#3b6ea5" stroke-width="12" stroke-linecap="round"/><circle cx="60" cy="239" r="6" fill="#d9a77c"/></g></g>
+<g id="B" transform="translate(450,0)"><ellipse cx="0" cy="292" rx="40" ry="6" fill="#000" opacity=".5"/>
+<rect x="-18" y="215" width="14" height="77" fill="#2a2a38"/><rect x="4" y="215" width="14" height="77" fill="#2a2a38"/>
+<path d="M-28 130 L28 130 L24 220 L-24 220Z" fill="#8c3b3b"/><rect x="-8" y="112" width="16" height="20" fill="#c68b63"/><circle cx="0" cy="96" r="20" fill="#c68b63"/>
+<path d="M-20 92 Q-18 72 0 72 Q20 72 20 92 Q6 82 -20 92Z" fill="#111"/><circle cx="-7" cy="97" r="2" fill="#111"/><circle cx="7" cy="97" r="2" fill="#111"/>
+<path d="M-6 107 Q0 104 6 107" stroke="#6a2f22" stroke-width="2" fill="none"/>
+<path d="M-26 138 L-40 200" stroke="#8c3b3b" stroke-width="12" stroke-linecap="round"/>
+<g id="armB"><path d="M26 138 L-6 170" stroke="#8c3b3b" stroke-width="12" stroke-linecap="round"/><circle cx="-8" cy="173" r="6" fill="#c68b63"/></g></g>
+<rect width="640" height="360" fill="url(#vg)"/></svg>
+<div class="cap" id="cap"><b id="who"></b><span id="line"></span></div></div>
+<button id="re">Replay scene</button>
+<script>
+var S=[["B","You can't keep doing this, Daniel. Walking out into the storm like it owes you something."],["A","I have no legs, Marcus. The storm is the only thing that has never pitied me."],["B","I'm not pitying you. I'm begging you to stop pushing everyone away."],["A","Everyone looks at the space where my legs should be. Nobody looks at me."],["B","Then look at yourself the way I do. You crossed this whole city on your hands."],["A","...Because stopping was never an option."],["B","Then don't stop now. Let me carry the weight for once."],["A","I lost my legs. I never lost my stubbornness. Stay. Let's see what's left of the night."]];
+var $=function(i){return document.getElementById(i)},i=0,tm;
+function clr(){["A","B"].forEach(function(x){$(x).classList.remove("talk")});$("armA").classList.remove("arm");$("armB").classList.remove("arm")}
+function go(){clr();if(i>=S.length){$("who").textContent="";$("line").textContent="— End —";return}
+var s=S[i++];$("cap").style.opacity=0;
+setTimeout(function(){$("who").textContent=s[0]=="A"?"Daniel":"Marcus";$("line").textContent=s[1];$("cap").style.opacity=1;$(s[0]).classList.add("talk");$("arm"+s[0]).classList.add("arm")},350);
+tm=setTimeout(go,4200)}
+$("re").onclick=function(){clearTimeout(tm);i=0;go()};go();
+</script></body></html>

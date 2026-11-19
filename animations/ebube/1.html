@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Car rotating about an axis</title>
+<style>
+  :root { --bg:#f6f5f1; --card:#ffffff; --ink:#2c2c2a; --muted:#5f5e5a; --line:#d3d1c7; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1f1e1c; --card:#2a2927; --ink:#f1efe8; --muted:#b4b2a9; --line:#444441; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:24px 16px 48px; background:var(--bg); color:var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 520px; margin: 0 auto; display:flex; flex-direction:column; gap:20px; }
+  h1 { font-size:22px; font-weight:500; margin:0 0 4px; }
+  figure { margin:0; background:var(--card); border:0.5px solid var(--line); border-radius:12px; padding:12px; }
+  figcaption { font-size:14px; color:var(--muted); padding:4px 4px 0; }
+  svg { width:100%; height:auto; display:block; }
+  .t { font-size:14px; fill:var(--ink); }
+  .ts { font-size:12px; fill:var(--muted); }
+  .th { font-size:14px; font-weight:500; fill:#2c2c2a; }
+  .bubble { fill:#ffffff; stroke:#888780; stroke-width:0.8; }
+  button { font:inherit; font-size:14px; padding:8px 14px; border-radius:8px; border:0.5px solid var(--line);
+           background:transparent; color:var(--ink); cursor:pointer; margin-top:8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Car rotating about an axis</h1>
+  <figure>
+    <svg viewBox="0 0 380 300" role="img" aria-label="A top-down car orbiting a central axis">
+      <circle cx="190" cy="150" r="100" fill="none" stroke="#888780" stroke-width="0.5" stroke-dasharray="4 4"/>
+      <circle cx="190" cy="150" r="9" fill="#B4B2A9" stroke="#5F5E5A"/>
+      <path d="M183,150 L197,150 M190,143 L190,157" stroke="#444441"/>
+      <text class="ts" x="190" y="182" text-anchor="middle">axis</text>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 190 150" to="360 190 150" dur="6s" repeatCount="indefinite"/>
+        <line x1="199" y1="150" x2="270" y2="150" stroke="#888780" stroke-dasharray="3 3"/>
+        <rect x="271" y="131" width="5" height="12" rx="1" fill="#2C2C2A"/>
+        <rect x="304" y="131" width="5" height="12" rx="1" fill="#2C2C2A"/>
+        <rect x="271" y="158" width="5" height="12" rx="1" fill="#2C2C2A"/>
+        <rect x="304" y="158" width="5" height="12" rx="1" fill="#2C2C2A"/>
+        <rect x="275" y="126" width="30" height="48" rx="9" fill="#D85A30" stroke="#712B13"/>
+        <rect x="279" y="153" width="22" height="8" rx="2" fill="#B5D4F4" stroke="#0C447C" stroke-width="0.5"/>
+        <rect x="279" y="134" width="22" height="6" rx="2" fill="#B5D4F4" stroke="#0C447C" stroke-width="0.5"/>
+        <rect x="279" y="141" width="22" height="11" rx="2" fill="#F0997B"/>
+        <circle cx="281" cy="172" r="2.5" fill="#FAC775"/>
+        <circle cx="299" cy="172" r="2.5" fill="#FAC775"/>
+      </g>
+    </svg>
+    <figcaption>2. The car rotates about the same central axis.</figcaption>
+  </figure>
+</main>
+</body>
+</html>

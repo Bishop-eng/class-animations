@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cat and Mouse</title><style>html,body{margin:0;height:100%;background:#14161f}body{display:flex;align-items:center;justify-content:center}svg{width:min(96vw,720px);height:auto;border-radius:10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.orbit{animation:sp 6s linear infinite;transform-box:view-box;transform-origin:150px 120px}
+.eye{animation:sp 6s linear infinite;transform-box:fill-box;transform-origin:center}
+.tail{animation:t 2s ease-in-out infinite;transform-origin:215px 190px;transform-box:view-box}@keyframes t{50%{transform:rotate(14deg)}}
+</style></head><body>
+<svg viewBox="0 0 300 220"><rect width="300" height="220" fill="#e9d8b4"/>
+<circle cx="150" cy="120" r="95" fill="none" stroke="#c9b68c" stroke-dasharray="4 6"/>
+<g class="tail"><path d="M200 185 Q245 180 238 140" stroke="#e08a2c" stroke-width="12" fill="none" stroke-linecap="round"/></g>
+<ellipse cx="150" cy="165" rx="46" ry="38" fill="#e08a2c"/>
+<polygon points="112,88 120,56 140,80" fill="#e08a2c"/><polygon points="188,88 180,56 160,80" fill="#e08a2c"/>
+<circle cx="150" cy="105" r="40" fill="#e08a2c"/>
+<g fill="#fff"><circle cx="135" cy="100" r="10"/><circle cx="165" cy="100" r="10"/></g>
+<g class="eye"><circle cx="135" cy="100" r="10" fill="none"/><circle cx="135" cy="95" r="4.5" fill="#111"/></g>
+<g class="eye"><circle cx="165" cy="100" r="10" fill="none"/><circle cx="165" cy="95" r="4.5" fill="#111"/></g>
+<polygon points="146,114 154,114 150,119" fill="#e86f8a"/>
+<path d="M150 119 Q144 126 138 122 M150 119 Q156 126 162 122" stroke="#222" fill="none" stroke-width="1.5"/>
+<g stroke="#222"><line x1="120" y1="116" x2="98" y2="112"/><line x1="120" y1="120" x2="98" y2="124"/><line x1="180" y1="116" x2="202" y2="112"/><line x1="180" y1="120" x2="202" y2="124"/></g>
+<g class="orbit"><g transform="translate(245,120) rotate(90)"><ellipse rx="9" ry="6" fill="#999"/><circle cx="-8" r="1.5" fill="#e86f8a"/><circle cx="-3" cy="-5" r="3.5" fill="#bbb"/><circle cx="-3" cy="5" r="3.5" fill="#bbb"/><path d="M9 0 Q18 -4 20 4" stroke="#e86f8a" fill="none" stroke-width="1.5"/></g></g></svg>
+</body></html>

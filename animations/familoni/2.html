@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Moving Car</title><style>html,body{margin:0;height:100%;background:#14161f}body{display:flex;align-items:center;justify-content:center}svg{width:min(96vw,720px);height:auto;border-radius:10px}
+.drive{animation:d 6s linear infinite}@keyframes d{from{transform:translateX(-140px)}to{transform:translateX(360px)}}
+.wheel{animation:w .6s linear infinite;transform-box:fill-box;transform-origin:center}@keyframes w{to{transform:rotate(360deg)}}
+.dash{animation:r 1s linear infinite}@keyframes r{to{stroke-dashoffset:-40}}
+</style></head><body>
+<svg viewBox="0 0 300 220"><defs><g id="car"><path d="M10 62 L10 44 Q10 38 18 36 L42 32 L58 14 Q62 10 68 10 L104 10 Q112 10 116 16 L132 34 L150 38 Q158 40 158 48 L158 62 Z" fill="#d6453d"/><path d="M62 16 L100 16 L120 34 L52 34 Z" fill="#bfe3f5"/><line x1="86" y1="16" x2="86" y2="34" stroke="#d6453d" stroke-width="3"/><rect x="148" y="42" width="10" height="8" fill="#ffe27a"/><g transform="translate(42,64)"><circle r="14" fill="#222"/><circle r="7" fill="#aaa"/><g class="wheel"><line x1="-7" x2="7" stroke="#222" stroke-width="2"/><line y1="-7" y2="7" stroke="#222" stroke-width="2"/></g></g><g transform="translate(124,64)"><circle r="14" fill="#222"/><circle r="7" fill="#aaa"/><g class="wheel"><line x1="-7" x2="7" stroke="#222" stroke-width="2"/><line y1="-7" y2="7" stroke="#222" stroke-width="2"/></g></g></g></defs><rect width="300" height="220" fill="#8ecae6"/><rect y="150" width="300" height="70" fill="#444"/>
+<line class="dash" x1="0" y1="188" x2="300" y2="188" stroke="#fff" stroke-width="4" stroke-dasharray="24 16"/>
+<g transform="translate(0,85)"><g class="drive"><use href="#car" transform="scale(.8)"/></g></g></svg>
+</body></html>

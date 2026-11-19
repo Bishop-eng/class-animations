@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotating Car Animation</title>
+<style>
+body{font-family:Arial,sans-serif;text-align:center;background:#f5f0ff;color:#29243b}
+h1{margin-top:28px}.stage{height:300px;max-width:650px;margin:35px auto;background:#fff;border:2px solid #b9a8e8;border-radius:16px;display:flex;align-items:center;justify-content:center;perspective:700px}
+.car{font-size:100px;animation:spin 3s linear infinite;transform-style:preserve-3d}
+@keyframes spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+.note{font-size:14px;color:#625b72}
+</style>
+</head>
+<body>
+<h1>🚗 Car Rotating About the Same Axis</h1>
+<p>The car rotates around its vertical centre axis.</p>
+<div class="stage"><div class="car">🚗</div></div>
+<p class="note">CSS animation: rotateY() and a 3-second duration.</p>
+</body>
+</html>

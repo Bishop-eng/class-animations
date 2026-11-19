@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moving Moon Animation</title>
+<style>
+body{margin:0;background:#07152e;color:white;font-family:Arial,sans-serif;text-align:center}
+h1{padding-top:24px}.sky{height:360px;max-width:760px;margin:25px auto;background:linear-gradient(#07152e,#192f58);border:2px solid #42577c;border-radius:18px;position:relative;overflow:hidden}
+.star{position:absolute;color:#fff;font-size:13px}.moon{position:absolute;top:75px;left:-80px;width:75px;height:75px;border-radius:50%;background:#f7efc5;box-shadow:0 0 30px #f7efc5;animation:travel 9s linear infinite}
+@keyframes travel{from{left:-80px;top:190px}50%{top:45px}to{left:calc(100% + 10px);top:190px}}
+</style>
+</head>
+<body>
+<h1>🌙 Moving Moon</h1>
+<p>The moon travels across the night sky.</p>
+<div class="sky">
+ <span class="star" style="top:45px;left:15%">✦</span><span class="star" style="top:120px;left:75%">✧</span>
+ <span class="star" style="top:230px;left:35%">✦</span><span class="star" style="top:75px;left:55%">✧</span>
+ <div class="moon"></div>
+</div>
+</body>
+</html>

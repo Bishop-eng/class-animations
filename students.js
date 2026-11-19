@@ -76,4 +76,25 @@ const students = [
     folder: "ayomide",
     titles: ["Moving Car", "Moon Orbiting Earth", "Bouncing Ball", "Cat and Mouse", "Rotating Car", "Dramatic Conversation"],
   },
+  {
+    name: "FAMILONI SAMUEL OLUWADUNSIN",
+    matric: "CPE/2022/1043",
+    photo: "familoni.jpg",
+    folder: "familoni",
+    titles: ["Bouncing Ball", "Moving Car", "Moon", "Cat and Mouse", "Rotating Car", "Dramatic Conversation"],
+  },
+  {
+    name: "EZE JOHN IFEANYICHUKWU",
+    matric: "CPE/2022/1042",
+    photo: "john.jpg",
+    folder: "john",
+    titles: ["Cat and Mouse", "Rotating Car", "Dramatic Robot Conversation", "Bouncing Ball", "Moving Moon", "Moving Car"],
+  },
+  {
+    name: "UKONU EBUBE DELIGHT",
+    matric: "CPE/2021/1071",
+    photo: "ebube.jpg",
+    folder: "ebube",
+    titles: ["Car Rotating", "Cat and Mouse", "Dramatic Conversation"],
+  },
 ];
