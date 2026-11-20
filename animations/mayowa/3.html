@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dramatic AI Conversation</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:22px;background:#101a2a;color:#edf5ff;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100vh}
+main{width:min(100%,1000px)}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:clamp(1.3rem,3vw,2rem);margin:0 0 5px}.sub{margin:0;color:#aebed0}.badge{border:1px solid #55708e;border-radius:25px;padding:8px 13px}
+.stage{overflow:hidden;border:1px solid #3c536e;border-radius:16px;background:#080e17}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+button{border:0;border-radius:8px;padding:12px 17px;font-weight:bold;background:#69d2ff;color:#092033;cursor:pointer}
+button.alt{background:#293e58;color:#fff;border:1px solid #55708e}button:disabled{opacity:.45}
+#status{color:#b8c7d8;margin-left:auto;font-size:.9rem}.tip{font-size:.9rem;color:#c2d0df;line-height:1.5}
+</style></head><body><main>
+<header><div><h1>Dramatic AI Conversation</h1><p class="sub">A female humanoid AI character without legs has an emotional conversation.</p></div><span class="badge">CPE 505 · Animation</span></header>
+<div class="stage"><canvas id="scene" width="1280" height="720"></canvas></div>
+<div class="controls"><button id="record">● Record video</button><button id="stop" class="alt" disabled>Stop &amp; download</button><button id="pause" class="alt">Pause animation</button><span id="status">Animation playing</span></div>
+<p class="tip">To save a video, press <b>Record video</b>, let the animation play, then press <b>Stop &amp; download</b>. A WebM video will be saved to your Downloads folder. Use Chrome or Edge for best results.</p>
+</main><script>
+const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d'),W=1280,H=720;
+const FILE_NAME='dramatic_ai_conversation.webm';let running=true,raf=0,start=performance.now(),recorder=null,chunks=[];
+function txt(s,x,y,size=24,color='#fff',align='left',weight='600'){ctx.fillStyle=color;ctx.font=`${weight} ${size}px Arial`;ctx.textAlign=align;ctx.fillText(s,x,y)}
+function ln(x,y,X,Y,c='#fff',w=4){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(X,Y);ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke()}
+function rr(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=3;ctx.stroke()}}
+function background(title,sub){let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#1b3652');g.addColorStop(1,'#080e18');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);txt(title,50,60,30);txt(sub,50,96,18,'#b6cde0','left','400')}
+function frame(){if(!running)return;draw((performance.now()-start)/1000);raf=requestAnimationFrame(frame)}
+function play(){running=true;start=performance.now();cancelAnimationFrame(raf);frame()}
+function pause(){running=false;cancelAnimationFrame(raf)}
+document.getElementById('pause').onclick=()=>{if(running){pause();document.getElementById('pause').textContent='Resume animation'}else{play();document.getElementById('pause').textContent='Pause animation'}};
+document.getElementById('record').onclick=()=>{
+ if(!canvas.captureStream||!window.MediaRecorder){alert('Please use Chrome or Edge to record this animation.');return}
+ chunks=[];let stream=canvas.captureStream(30),opts={};
+ if(MediaRecorder.isTypeSupported('video/webm;codecs=vp9'))opts.mimeType='video/webm;codecs=vp9';
+ recorder=new MediaRecorder(stream,opts);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+ recorder.onstop=()=>{let blob=new Blob(chunks,{type:recorder.mimeType||'video/webm'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=FILE_NAME;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);document.getElementById('status').textContent='Downloaded! Check your Downloads folder.';document.getElementById('record').disabled=false;document.getElementById('stop').disabled=true};
+ recorder.start();document.getElementById('record').disabled=true;document.getElementById('stop').disabled=false;document.getElementById('status').textContent='Recording…';
+};
+document.getElementById('stop').onclick=()=>{if(recorder&&recorder.state!=='inactive')recorder.stop()};
+
+function bubble(x,y,w,h,lines,tail){rr(x,y,w,h,22,'#f2f6ff','#9dc8ed');lines.forEach((s,i)=>txt(s,x+20,y+39+i*30,20,'#17263b'));ctx.fillStyle='#f2f6ff';ctx.beginPath();if(tail==='l'){ctx.moveTo(x+55,y+h);ctx.lineTo(x+35,y+h+22);ctx.lineTo(x+90,y+h)}else{ctx.moveTo(x+w-55,y+h);ctx.lineTo(x+w-35,y+h+22);ctx.lineTo(x+w-90,y+h)}ctx.fill()}
+function draw(t){
+ background('A DRAMATIC CONVERSATION','A female humanoid AI character without legs speaks with a human companion.');
+ ctx.fillStyle='#111b2c';ctx.fillRect(0,470,W,250);
+ let glow=ctx.createRadialGradient(640,330,30,640,330,470);glow.addColorStop(0,'#496f9650');glow.addColorStop(1,'#10182700');ctx.fillStyle=glow;ctx.fillRect(0,100,W,500);
+ // female character seated on a chair; no legs are depicted
+ ctx.save();ctx.translate(380,400);rr(-120,25,240,42,14,'#344b64','#7791aa');ln(-90,65,-90,120,'#7791aa',9);ln(90,65,90,120,'#7791aa',9);
+ ctx.fillStyle='#5e9fc1';ctx.beginPath();ctx.moveTo(-75,-85);ctx.quadraticCurveTo(-100,-20,-82,35);ctx.lineTo(82,35);ctx.quadraticCurveTo(100,-20,75,-85);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#e8b9a4';ctx.fillRect(-18,-115,36,35);ctx.beginPath();ctx.ellipse(0,-165,66,78,0,0,7);ctx.fill();
+ ctx.fillStyle='#30283a';ctx.beginPath();ctx.arc(0,-185,70,Math.PI,Math.PI*2);ctx.lineTo(67,-135);ctx.quadraticCurveTo(60,-90,45,-105);ctx.lineTo(42,-155);ctx.lineTo(-45,-155);ctx.lineTo(-55,-105);ctx.quadraticCurveTo(-80,-135,-65,-180);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#352b35';ctx.beginPath();ctx.ellipse(-24,-166,7,5,0,0,7);ctx.ellipse(24,-166,7,5,0,0,7);ctx.fill();
+ ln(-38,-181,-16,-184,'#513642',4);ln(16,-184,38,-181,'#513642',4);
+ ctx.strokeStyle='#9b4d57';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,-132,13,.15,Math.PI-.15);ctx.stroke();
+ let gesture=Math.sin(t*2.4)*18;ln(-65,-55,-112,-5+gesture,'#e8b9a4',17);ln(-112,-5+gesture,-125,10+gesture,'#e8b9a4',14);ln(65,-55,110,-10-gesture,'#e8b9a4',17);ln(110,-10-gesture,125,-28-gesture,'#e8b9a4',14);
+ ctx.fillStyle='#9cf0ff';ctx.beginPath();ctx.arc(0,-25,10+Math.sin(t*4)*2,0,7);ctx.fill();ctx.restore();
+ // human companion
+ ctx.save();ctx.translate(890,420);ctx.fillStyle='#bdc8d8';ctx.beginPath();ctx.ellipse(0,20,75,100,0,0,7);ctx.fill();ctx.fillStyle='#d7a889';ctx.beginPath();ctx.arc(0,-100,53,0,7);ctx.fill();ctx.fillStyle='#28364a';ctx.beginPath();ctx.arc(0,-118,55,Math.PI,Math.PI*2);ctx.fill();ln(-38,-45,-95,10,'#d7a889',18);ln(38,-45,90,-8,'#d7a889',18);ctx.restore();
+ const phase=Math.floor(t/4)%4;
+ const dialogue=[['Please… listen to me.','I am more than my design.'],['I hear you. I never said','you were less than human.'],['Then see me. Not my limits.','See the person I choose to be.'],['I see you. And I am here.','You do not face this alone.']];
+ bubble(95,105,465,104,dialogue[phase],'l');bubble(720,145,450,104,phase%2===0?['I am listening.','Tell me what hurts.']:['I see you.','I am not looking away.'],'r');
+ txt('A conversation about dignity, identity and acceptance',640,660,20,'#a9dfff','center','400');
+}
+play();
+</script></body></html>

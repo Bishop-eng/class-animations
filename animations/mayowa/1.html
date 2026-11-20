@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cat and Mouse</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:22px;background:#101a2a;color:#edf5ff;font-family:Arial,sans-serif;display:grid;place-items:center;min-height:100vh}
+main{width:min(100%,1000px)}header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:clamp(1.3rem,3vw,2rem);margin:0 0 5px}.sub{margin:0;color:#aebed0}.badge{border:1px solid #55708e;border-radius:25px;padding:8px 13px}
+.stage{overflow:hidden;border:1px solid #3c536e;border-radius:16px;background:#080e17}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+button{border:0;border-radius:8px;padding:12px 17px;font-weight:bold;background:#69d2ff;color:#092033;cursor:pointer}
+button.alt{background:#293e58;color:#fff;border:1px solid #55708e}button:disabled{opacity:.45}
+#status{color:#b8c7d8;margin-left:auto;font-size:.9rem}.tip{font-size:.9rem;color:#c2d0df;line-height:1.5}
+</style></head><body><main>
+<header><div><h1>Cat and Mouse</h1><p class="sub">A playful cat follows a mouse circling around it.</p></div><span class="badge">CPE 505 · Animation</span></header>
+<div class="stage"><canvas id="scene" width="1280" height="720"></canvas></div>
+<div class="controls"><button id="record">● Record video</button><button id="stop" class="alt" disabled>Stop &amp; download</button><button id="pause" class="alt">Pause animation</button><span id="status">Animation playing</span></div>
+<p class="tip">To save a video, press <b>Record video</b>, let the animation play, then press <b>Stop &amp; download</b>. A WebM video will be saved to your Downloads folder. Use Chrome or Edge for best results.</p>
+</main><script>
+const canvas=document.getElementById('scene'),ctx=canvas.getContext('2d'),W=1280,H=720;
+const FILE_NAME='cat_and_mouse.webm';let running=true,raf=0,start=performance.now(),recorder=null,chunks=[];
+function txt(s,x,y,size=24,color='#fff',align='left',weight='600'){ctx.fillStyle=color;ctx.font=`${weight} ${size}px Arial`;ctx.textAlign=align;ctx.fillText(s,x,y)}
+function ln(x,y,X,Y,c='#fff',w=4){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(X,Y);ctx.strokeStyle=c;ctx.lineWidth=w;ctx.lineCap='round';ctx.stroke()}
+function rr(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=3;ctx.stroke()}}
+function background(title,sub){let g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#1b3652');g.addColorStop(1,'#080e18');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);txt(title,50,60,30);txt(sub,50,96,18,'#b6cde0','left','400')}
+function frame(){if(!running)return;draw((performance.now()-start)/1000);raf=requestAnimationFrame(frame)}
+function play(){running=true;start=performance.now();cancelAnimationFrame(raf);frame()}
+function pause(){running=false;cancelAnimationFrame(raf)}
+document.getElementById('pause').onclick=()=>{if(running){pause();document.getElementById('pause').textContent='Resume animation'}else{play();document.getElementById('pause').textContent='Pause animation'}};
+document.getElementById('record').onclick=()=>{
+ if(!canvas.captureStream||!window.MediaRecorder){alert('Please use Chrome or Edge to record this animation.');return}
+ chunks=[];let stream=canvas.captureStream(30),opts={};
+ if(MediaRecorder.isTypeSupported('video/webm;codecs=vp9'))opts.mimeType='video/webm;codecs=vp9';
+ recorder=new MediaRecorder(stream,opts);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+ recorder.onstop=()=>{let blob=new Blob(chunks,{type:recorder.mimeType||'video/webm'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=FILE_NAME;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);document.getElementById('status').textContent='Downloaded! Check your Downloads folder.';document.getElementById('record').disabled=false;document.getElementById('stop').disabled=true};
+ recorder.start();document.getElementById('record').disabled=true;document.getElementById('stop').disabled=false;document.getElementById('status').textContent='Recording…';
+};
+document.getElementById('stop').onclick=()=>{if(recorder&&recorder.state!=='inactive')recorder.stop()};
+
+function draw(t){
+ background('A CAT WATCHES A MOUSE','The mouse runs in a circle while the cat tracks its movement.');
+ ctx.fillStyle='#14283b';ctx.fillRect(0,490,W,230);ln(0,490,W,490,'#45627c',3);
+ ctx.beginPath();ctx.ellipse(640,410,280,82,0,0,7);ctx.setLineDash([10,12]);ctx.strokeStyle='#34536e';ctx.lineWidth=3;ctx.stroke();ctx.setLineDash([]);
+ // cat body and tail
+ ctx.fillStyle='#e7a34f';ctx.beginPath();ctx.ellipse(640,450,105,92,0,0,7);ctx.fill();
+ ctx.beginPath();ctx.moveTo(720,440);ctx.quadraticCurveTo(840,390+Math.sin(t*3)*24,790,340+Math.sin(t*3)*20);ctx.strokeStyle='#e7a34f';ctx.lineWidth=22;ctx.lineCap='round';ctx.stroke();
+ // mouse position drives cat head/eyes
+ let a=t*1.1,mx=640+280*Math.cos(a),my=410+82*Math.sin(a),turn=Math.atan2(my-330,mx-640)*.22;
+ ctx.save();ctx.translate(640,335);ctx.rotate(turn);
+ ctx.fillStyle='#e7a34f';ctx.beginPath();ctx.arc(0,0,76,0,7);ctx.fill();
+ ctx.beginPath();ctx.moveTo(-57,-48);ctx.lineTo(-68,-125);ctx.lineTo(-12,-78);ctx.moveTo(57,-48);ctx.lineTo(68,-125);ctx.lineTo(12,-78);ctx.fill();
+ ctx.fillStyle='#f2a3a0';ctx.beginPath();ctx.moveTo(-53,-63);ctx.lineTo(-59,-105);ctx.lineTo(-27,-78);ctx.moveTo(53,-63);ctx.lineTo(59,-105);ctx.lineTo(27,-78);ctx.fill();
+ ctx.fillStyle='white';ctx.beginPath();ctx.ellipse(-27,-5,17,22,0,0,7);ctx.ellipse(27,-5,17,22,0,0,7);ctx.fill();
+ ctx.fillStyle='#263d32';let shift=Math.cos(a)*8;ctx.beginPath();ctx.arc(-27+shift,-3,8,0,7);ctx.arc(27+shift,-3,8,0,7);ctx.fill();
+ ctx.fillStyle='#e98b91';ctx.beginPath();ctx.moveTo(-9,24);ctx.lineTo(9,24);ctx.lineTo(0,33);ctx.fill();ln(0,33,0,44,'#744b3c',2);ln(-3,42,-18,49,'#744b3c',2);ln(3,42,18,49,'#744b3c',2);
+ ctx.restore();
+ // mouse
+ ctx.save();ctx.translate(mx,my);ctx.fillStyle='#b8bec8';ctx.beginPath();ctx.ellipse(0,0,31,22,0,0,7);ctx.fill();
+ ctx.beginPath();ctx.arc(-17,-18,12,0,7);ctx.arc(12,-18,12,0,7);ctx.fill();ctx.fillStyle='#f2a3b1';ctx.beginPath();ctx.arc(-17,-18,6,0,7);ctx.arc(12,-18,6,0,7);ctx.fill();
+ ctx.fillStyle='#17202b';ctx.beginPath();ctx.arc(22,-4,3,0,7);ctx.fill();ln(27,2,47,8,'#ddd',2);ln(27,6,46,17,'#ddd',2);ctx.restore();
+ txt('MOUSE RUNNING IN A CIRCLE',640,650,21,'#a5ddff','center');
+}
+play();
+</script></body></html>

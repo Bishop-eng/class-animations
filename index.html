@@ -7,39 +7,82 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Group 7 (CPE 505)</h1>
-    <p>Click a student to see their work.</p>
-  </header>
+  <section id="intro" class="intro">
+    <div class="intro-inner">
+      <p class="eyebrow">Welcome to</p>
+      <h1>Group 7</h1>
+      <p class="greeting"><span id="greet">Hello</span>, and thank you for taking the time to visit our page.</p>
 
-  <main>
-    <div id="gallery" class="gallery"></div>
-  </main>
+      <div class="course">
+        <p class="code">CPE 505</p>
+        <h2>Computer Graphics and Animation</h2>
+        <p class="note">Computer graphics is the creation, storage, and manipulation of still or moving visual images and models using computers. Computer animation is a subfield of computer graphics that digitally generates the illusion of movement by displaying a sequence of slightly changed images over time. The course covers both 2D and 3D graphics and animation.</p>
+      </div>
+
+      <p class="lecturer">Lecturer: <strong>Dr Engr N.S. Okomba</strong></p>
+
+      <button id="enter" class="enter">View Students &amp; Animation Works</button>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden">
+    <header>
+      <button id="back" class="back">← Back</button>
+      <h1>Group 7 (CPE 505)</h1>
+      <p>Click a student to see their profile and work.</p>
+    </header>
+
+    <main>
+      <div id="gallery" class="gallery"></div>
+    </main>
+  </div>
 
   <div id="modal" class="modal hidden">
-    <div class="topbar">
-      <img id="mPhoto" alt="">
-      <div class="who">
-        <h2 id="mName"></h2>
-        <p id="mMatric"></p>
-      </div>
-      <div id="tabs" class="tabs"></div>
-      <div class="actions">
-        <button id="toggleCode">Show code</button>
-        <button id="full">Fullscreen</button>
-        <button id="close" class="close" aria-label="Close">×</button>
+
+    <!-- Screen 1: student profile -->
+    <div id="profile" class="profile">
+      <button id="closeProfile" class="closeTop" aria-label="Close">×</button>
+      <div class="profile-inner">
+        <img id="pPhoto" alt="">
+        <h2 id="pName"></h2>
+        <p id="pMatric"></p>
+        <div id="pBio" class="pbio"></div>
+        <button id="showWorks" class="enter">Show Animation Works</button>
       </div>
     </div>
-    <div class="stage">
-      <iframe id="frame" sandbox="allow-scripts" allow="fullscreen" allowfullscreen title="Animation result"></iframe>
-      <div id="codebox" class="codebox hidden">
-        <div class="codebar">
-          <span>Code</span>
-          <button id="copy">Copy</button>
+
+    <!-- Screen 2: animation works -->
+    <div id="works" class="works hidden">
+      <div class="topbar">
+        <button id="toProfile" class="ghost">← Profile</button>
+        <img id="mPhoto" alt="">
+        <div class="who">
+          <h2 id="mName"></h2>
+          <p id="mMatric"></p>
         </div>
-        <pre><code id="code"></code></pre>
+        <div id="sections" class="sections"></div>
+        <div class="actions">
+          <button id="toggleCode">Show code</button>
+          <button id="full">Fullscreen</button>
+          <button id="close" class="close" aria-label="Close">×</button>
+        </div>
+      </div>
+      <div class="subbar">
+        <span id="secLabel" class="seclabel"></span>
+        <div id="tabs" class="tabs"></div>
+      </div>
+      <div class="stage">
+        <iframe id="frame" sandbox="allow-scripts" allow="fullscreen" allowfullscreen title="Animation result"></iframe>
+        <div id="codebox" class="codebox hidden">
+          <div class="codebar">
+            <span>Code</span>
+            <button id="copy">Copy</button>
+          </div>
+          <pre><code id="code"></code></pre>
+        </div>
       </div>
     </div>
+
   </div>
 
   <script src="students.js"></script>
