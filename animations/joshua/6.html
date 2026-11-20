@@ -1,124 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Moving Car</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(to bottom, #74b9ff, #dfe6e9);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .road {
-      width: 100%;
-      height: 120px;
-      background: #2d3436;
-      position: relative;
-      border-top: 8px solid #636e72;
-    }
-    .lines {
-      width: 200%;
-      height: 8px;
-      background: repeating-linear-gradient(to right, #ffeaa7 0, #ffeaa7 60px, transparent 60px, transparent 120px);
-      position: absolute;
-      top: 50%;
-      animation: moveRoad 1s linear infinite;
-    }
-    .car {
-      position: absolute;
-      bottom: 90px;
-      left: -250px;
-      width: 220px;
-      height: 90px;
-      animation: drive 5s linear infinite, rumble 0.2s infinite;
-    }
-    .cabin {
-      width: 120px;
-      height: 45px;
-      background: #e17055;
-      border-radius: 30px 40px 0 0;
-      margin-left: 40px;
-      position: relative;
-    }
-    .window {
-      width: 45px;
-      height: 30px;
-      background: #81ecec;
-      border-radius: 20px 5px 0 0;
-      position: absolute;
-      top: 10px;
-      left: 15px;
-    }
-    .window.front {
-      left: 65px;
-      border-radius: 5px 25px 0 0;
-    }
-    .body {
-      width: 220px;
-      height: 45px;
-      background: #d63031;
-      border-radius: 20px 35px 10px 10px;
-      position: relative;
-    }
-    .headlight {
-      width: 15px;
-      height: 15px;
-      background: #ffeaa7;
-      border-radius: 50%;
-      position: absolute;
-      right: 5px;
-      top: 12px;
-      box-shadow: 20px 0 30px 10px rgba(255, 234, 167, 0.8);
-    }
-    .wheel {
-      width: 44px;
-      height: 44px;
-      background: #1e272e;
-      border-radius: 50%;
-      position: absolute;
-      bottom: -20px;
-      border: 4px dashed #b2bec3;
-      box-sizing: border-box;
-      animation: spin 0.5s linear infinite;
-    }
-    .wheel.back { left: 30px; }
-    .wheel.front { right: 30px; }
-
-    @keyframes drive {
-      0% { left: -250px; }
-      100% { left: 110vw; }
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes moveRoad {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-120px); }
-    }
-    @keyframes rumble {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-2px); }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moving Car</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:linear-gradient(#7ec8f0,#d8f0ff 65%)}
+  .scene{position:relative;width:100%;height:100%;overflow:hidden}
+  .layer{position:absolute;left:0;right:0}
+  /* parallax: everything scrolls LEFT, so the car clearly drives RIGHT */
+  .hills{bottom:28%;height:26%;background-repeat:repeat-x;background-size:900px 100%;
+    background-image:radial-gradient(ellipse 260px 100% at 200px 100%,#6bb87a 98%,transparent 100%),
+                     radial-gradient(ellipse 320px 80% at 640px 100%,#58a468 98%,transparent 100%);
+    animation:scroll 18s linear infinite;--w:900px}
+  .trees{bottom:27%;height:70px;background-size:300px 100%;background-repeat:repeat-x;
+    background-image:
+      radial-gradient(circle at 40px 28px,#2f7d46 24px,transparent 25px),
+      linear-gradient(#6b4423,#6b4423),
+      radial-gradient(circle at 200px 28px,#2f7d46 24px,transparent 25px),
+      linear-gradient(#6b4423,#6b4423);
+    background-position:0 0,38px 52px,0 0,198px 52px;
+    animation:scroll 4s linear infinite;--w:300px}
+  .road{bottom:0;height:28%;background:#3a3f47}
+  .curb{bottom:28%;height:6px;background:#bfc4cc}
+  .lines{bottom:12%;height:6px;background:repeating-linear-gradient(90deg,#fff 0 60px,transparent 60px 120px);
+    background-size:120px 100%;animation:scroll 0.6s linear infinite;--w:120px}
+  @keyframes scroll{to{background-position-x:calc(var(--w) * -1)}}
+  .trees{animation-name:scrollTrees}
+  @keyframes scrollTrees{from{background-position:0 0,38px 52px,0 0,198px 52px}to{background-position:-300px 0,-262px 52px,-300px 0,-102px 52px}}
+  .cloud{position:absolute;width:140px;height:40px;background:#fff;border-radius:40px;opacity:.9;animation:cloud 45s linear infinite}
+  @keyframes cloud{from{left:110%}to{left:-200px}}
+  .car{position:absolute;bottom:17%;left:50%;margin-left:-150px;width:300px}
+  .bob{animation:bob .3s ease-in-out infinite alternate}
+  @keyframes bob{to{transform:translateY(-3px)}}
+  .tilt{transform-origin:50% 100%;animation:tilt 2.4s ease-in-out infinite alternate}
+  @keyframes tilt{to{transform:rotate(-0.8deg)}}
+  .wheel{transform-box:fill-box;transform-origin:center;animation:spin .63s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .puff{position:absolute;bottom:20%;left:calc(50% - 175px);width:16px;height:16px;border-radius:50%;background:#e6e6e6;opacity:0;animation:puff 1.2s ease-out infinite}
+  @keyframes puff{0%{opacity:.7;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(-70px,-18px) scale(2)}}
+</style>
 </head>
 <body>
+<div class="scene">
+  <div class="cloud" style="top:10%"></div>
+  <div class="cloud" style="top:22%;animation-duration:70s;animation-delay:-30s;transform:scale(.7)"></div>
+  <div class="layer hills"></div>
+  <div class="layer trees"></div>
+  <div class="layer road"></div>
+  <div class="layer curb"></div>
+  <div class="layer lines"></div>
+  <div class="puff"></div><div class="puff" style="animation-delay:-.4s"></div><div class="puff" style="animation-delay:-.8s"></div>
+
   <div class="car">
-    <div class="cabin">
-      <div class="window"></div>
-      <div class="window front"></div>
-    </div>
-    <div class="body">
-      <div class="headlight"></div>
-      <div class="wheel back"></div>
-      <div class="wheel front"></div>
-    </div>
+    <div class="tilt"><svg class="bob" viewBox="0 0 270 110" width="100%">
+      <!-- body: short trunk on the LEFT, long hood on the RIGHT (front = right) -->
+      <path d="M8 72 Q8 54 28 52 L48 48 Q62 18 100 16 L148 16 Q178 20 196 46 L238 54 Q254 58 254 72 L254 84 L8 84 Z" fill="#e63946"/>
+      <path d="M68 46 Q78 26 100 24 L118 24 L118 46 Z" fill="#cfeaff"/>
+      <path d="M126 24 L146 24 Q168 28 182 46 L126 46 Z" fill="#cfeaff"/>
+      <rect x="120" y="50" width="12" height="3" rx="1.5" fill="#b02a35"/>
+      <path d="M236 56 L254 60 L254 68 L238 66 Z" fill="#ffe27a"/>
+      <rect x="8" y="60" width="9" height="9" rx="3" fill="#ff2a2a"/>
+      <rect x="90" y="84" width="90" height="4" fill="#8f1d27"/>
+      <g class="wheel"><circle cx="62" cy="86" r="21" fill="#222"/><circle cx="62" cy="86" r="10" fill="#c9ccd1"/><rect x="60" y="67" width="4" height="38" fill="#888"/><rect x="43" y="84" width="38" height="4" fill="#888"/></g>
+      <g class="wheel"><circle cx="200" cy="86" r="21" fill="#222"/><circle cx="200" cy="86" r="10" fill="#c9ccd1"/><rect x="198" y="67" width="4" height="38" fill="#888"/><rect x="181" y="84" width="38" height="4" fill="#888"/></g>
+    </svg></div>
   </div>
-  <div class="road">
-    <div class="lines"></div>
-  </div>
+</div>
 </body>
 </html>
