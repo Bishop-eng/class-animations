@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Moving Car</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#134e5e,#71b280);font-family:Arial;color:white}
+.scene{width:min(92vw,700px);height:420px;position:relative;overflow:hidden;border:3px solid #ffffff55;border-radius:24px;background:linear-gradient(#9dd8f2 0 65%,#78b86b 65%)}
+h1{position:absolute;top:18px;width:100%;text-align:center;margin:0;color:#24465a;font-size:clamp(20px,4vw,30px)}
+.road{position:absolute;bottom:35px;width:100%;height:105px;background:#444}
+.line{position:absolute;top:50%;width:100%;height:5px;background:repeating-linear-gradient(90deg,#fff 0 55px,transparent 55px 100px);animation:road 1s linear infinite}
+.car{position:absolute;bottom:118px;left:-130px;font-size:85px;animation:drive 5s linear infinite;filter:drop-shadow(0 6px 3px #0004)}
+@keyframes drive{to{left:calc(100% + 130px)}}
+@keyframes road{to{background-position:-100px 0}}
+.cloud{position:absolute;top:100px;left:15%;font-size:55px;opacity:.75}
+</style></head><body><main class="scene"><h1>Moving Car</h1><div class="cloud">☁️</div><div class="car">🚙</div><div class="road"><div class="line"></div></div></main></body></html>

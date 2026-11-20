@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Moving Moon</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#090b2a,#25245b);font-family:Arial;color:white}
+.scene{width:min(92vw,650px);height:420px;position:relative;overflow:hidden;border:3px solid #ffffff55;border-radius:24px;background:linear-gradient(#090b2a,#30336b)}
+h1{position:absolute;top:18px;width:100%;text-align:center;margin:0;font-size:clamp(20px,4vw,30px)}
+.star{position:absolute;color:#fff;font-size:18px;animation:twinkle 1.5s ease-in-out infinite alternate}
+.s1{top:100px;left:15%}.s2{top:160px;right:18%}.s3{top:250px;left:30%}.s4{top:90px;right:35%}.s5{top:300px;right:28%}
+.moon{position:absolute;left:10%;top:48%;font-size:82px;filter:drop-shadow(0 0 22px #fff5);animation:move 7s ease-in-out infinite alternate}
+.horizon{position:absolute;bottom:-90px;left:-5%;width:110%;height:170px;border-radius:50% 50% 0 0;background:#11162f}
+@keyframes move{from{left:8%;top:45%;transform:rotate(-15deg)}to{left:78%;top:28%;transform:rotate(15deg)}}
+@keyframes twinkle{to{opacity:.25;transform:scale(.7)}}
+</style></head><body><main class="scene"><h1>Moving Moon</h1><span class="star s1">✦</span><span class="star s2">✧</span><span class="star s3">✦</span><span class="star s4">✧</span><span class="star s5">✦</span><div class="moon">🌕</div><div class="horizon"></div></main></body></html>

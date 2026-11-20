@@ -6,7 +6,13 @@ const students = [
     folder: "joshua",
     titles: ["Bouncing Ball", "Car Rotating", "Handicap", "Moon", "Mouse", "Moving Car"],
     first: [1, 4, 6],
-    bio: "I’m a 500-level Computer Engineering student passionate about building intelligent, connected systems where hardware meets software. My core interests span embedded systems, digital communication, biomedical engineering, and machine learning—designing smart, real-world solutions that sense, transmit, and act on critical data. Right now, I am focused on my final-year engineering project, integrating embedded hardware, reliable communication protocols, and machine learning to build a responsive assistive system. Across my academic and hands-on technical journey, I’ve enjoyed taking ideas from low-level logic and signal transmission all the way to working prototypes. I thrive on solving complex engineering problems with clean, resilient, and practical system architectures. Whether you’re looking to collaborate on health-tech, embedded AI, or connected hardware projects, feel free to reach out."
+    bio: `I’m a 500-level Computer Engineering student passionate about building intelligent, connected systems where hardware meets software. My core interests span embedded systems, digital communication, biomedical engineering, and machine learning—designing smart, real-world solutions that sense, transmit, and act on critical data.
+
+Right now, I am focused on my final-year engineering project, integrating embedded hardware, reliable communication protocols, and machine learning to build a responsive assistive system.
+
+Across my academic and hands-on technical journey, I’ve enjoyed taking ideas from low-level logic and signal transmission all the way to working prototypes. I thrive on solving complex engineering problems with clean, resilient, and practical system architectures.
+
+Whether you’re looking to collaborate on health-tech, embedded AI, or connected hardware projects, feel free to reach out.`,
   },
   {
     name: "FOLARIN ABDULMALIK OLAMILEKAN",
@@ -126,5 +132,14 @@ My goal is to grow into a versatile technology professional, deepen my expertise
     folder: "mayowa",
     titles: ["Cat and Mouse", "Rotating Car", "Dramatic Conversation"],
     first: [],
+  },
+  {
+    name: "AKANBI YUSUF TAIWO",
+    matric: "CPE/2022/1108",
+    photo: "yusuf.jpg",
+    folder: "yusuf",
+    titles: ["Cat and Mouse", "Rotating Car", "Bouncing Ball", "Moving Car", "Moving Moon"],
+    first: [3, 4, 5],
+    bio: `My name is Akanbi Yusuf Taiwo, a Computer Engineering student at the Federal University Oye-Ekiti. I am passionate about technology, innovation, and personal development. I am a goal-oriented individual who enjoys learning new things, exploring creative ideas, and developing skills that will help me grow both personally and professionally. I aspire to become a successful engineer and make meaningful contributions to the world through technology.`,
   },
 ];

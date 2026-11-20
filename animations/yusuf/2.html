@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Rotating Car</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#141e30,#243b55);font-family:Arial;color:white}
+.scene{width:min(92vw,650px);height:420px;position:relative;overflow:hidden;border:3px solid #ffffff55;border-radius:24px;background:radial-gradient(circle at center,#55718d,#1b3048)}
+h1{position:absolute;top:18px;width:100%;text-align:center;margin:0;font-size:clamp(20px,4vw,30px)}
+.axis{position:absolute;left:50%;top:52%;width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 0 7px #ffffff22,0 0 20px white}
+.car{position:absolute;left:50%;top:52%;font-size:95px;transform:translate(-50%,-50%);transform-origin:center;animation:spin 3s linear infinite;filter:drop-shadow(0 8px 5px #0006)}
+.ring{position:absolute;left:50%;top:52%;width:220px;height:220px;border:2px dashed #a8c6df88;border-radius:50%;transform:translate(-50%,-50%)}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.caption{position:absolute;bottom:25px;width:100%;text-align:center;color:#d9e9f6}
+</style></head><body><main class="scene"><h1>Car Rotating About Its Own Axis</h1><div class="ring"></div><div class="axis"></div><div class="car">🚗</div><div class="caption">The car spins in place around its centre.</div></main></body></html>

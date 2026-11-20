@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bouncing Ball</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#42275a,#734b6d);font-family:Arial;color:white}
+.scene{width:min(92vw,650px);height:420px;position:relative;overflow:hidden;border:3px solid #ffffff55;border-radius:24px;background:linear-gradient(#b6d9f2 0 75%,#d6e8bb 75%)}
+h1{position:absolute;top:18px;width:100%;text-align:center;margin:0;color:#26384a;font-size:clamp(20px,4vw,30px)}
+.ball{position:absolute;left:calc(50% - 35px);bottom:75px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 28% 25%,#fff9,#ff5959 25%,#c90036 80%);box-shadow:inset -9px -10px 15px #6d001f66,0 10px 15px #0003;animation:bounce 1.15s ease-in-out infinite}
+.shadow{position:absolute;left:calc(50% - 45px);bottom:55px;width:90px;height:17px;border-radius:50%;background:#34452c55;animation:shadow 1.15s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0) scale(1.12,.88)}50%{transform:translateY(-245px) scale(.92,1.08)}}
+@keyframes shadow{0%,100%{transform:scaleX(1);opacity:.5}50%{transform:scaleX(.45);opacity:.18}}
+</style></head><body><main class="scene"><h1>Bouncing Ball</h1><div class="ball"></div><div class="shadow"></div></main></body></html>

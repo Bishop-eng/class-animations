@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cat and Mouse</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#182848,#4b6cb7);font-family:Arial,sans-serif;color:white}
+.scene{width:min(92vw,650px);height:420px;border:3px solid #ffffff55;border-radius:24px;background:#d9f0df;position:relative;overflow:hidden;box-shadow:0 20px 50px #0005}
+h1{position:absolute;top:15px;width:100%;text-align:center;color:#264b35;margin:0;font-size:clamp(20px,4vw,30px)}
+.cat{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:100px;z-index:2;filter:drop-shadow(0 7px 4px #0003)}
+.mouse-orbit{position:absolute;left:50%;top:50%;width:260px;height:180px;margin:-90px 0 0 -130px;border:2px dashed #6b9d76;border-radius:50%;animation:orbit 4s linear infinite}
+.mouse{position:absolute;left:50%;top:-26px;transform:translateX(-50%);font-size:42px;filter:drop-shadow(0 4px 2px #0003)}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.grass{position:absolute;bottom:0;height:55px;width:100%;background:repeating-linear-gradient(75deg,#77b77d 0 8px,#8ac98d 8px 16px)}
+</style></head>
+<body><main class="scene"><h1>A Cat Watching a Mouse</h1><div class="cat">🐈</div><div class="mouse-orbit"><div class="mouse">🐭</div></div><div class="grass"></div></main></body></html>
